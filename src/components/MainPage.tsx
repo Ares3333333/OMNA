@@ -11,6 +11,7 @@ import { SessionSummary } from "@/components/SessionSummary";
 import { StatsPanel } from "@/components/StatsPanel";
 import { useAudioEngine } from "@/hooks/useAudioEngine";
 import { useBreathCycle } from "@/hooks/useBreathCycle";
+import { useEveningRitual } from "@/hooks/useEveningRitual";
 import { useGlobalRitualState } from "@/hooks/useGlobalRitualState";
 import { useMicrophoneLevel } from "@/hooks/useMicrophoneLevel";
 import {
@@ -34,6 +35,7 @@ export function MainPage() {
   const [lifeSeconds, setLifeSeconds] = useState(initialLifeSeconds);
   const [lastSession, setLastSession] = useState<SessionResult | null>(null);
   const [shareFeedback, setShareFeedback] = useState("");
+  const eveningRitual = useEveningRitual();
 
   const breath = useBreathCycle(isJoined && mode === "breath");
   const { micLevel, microphoneStatus } = useMicrophoneLevel(
@@ -299,8 +301,14 @@ export function MainPage() {
               </>
             )}
 
-            <div className="mmatrix-ritual-note">
-              Общий вечерний Ом — каждый день в 22:00
+            <div
+              className={[
+                "mmatrix-ritual-note",
+                eveningRitual.isLive ? "mmatrix-ritual-note-live" : "",
+              ].join(" ")}
+            >
+              <span>{eveningRitual.label}</span>
+              <span>{eveningRitual.detail}</span>
             </div>
           </div>
 

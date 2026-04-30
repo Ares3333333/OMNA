@@ -58,19 +58,24 @@ export function useAudioEngine(input: AudioInput) {
       inputRef.current;
     const now = context.currentTime;
     const force = clamp(globalForce / 100, 0, 1);
-    const breathSwell = mode === "breath" ? 0.9 + breathValue * 0.14 : 1;
-    const voiceBloom = mode === "voice" ? micLevel * 0.06 : 0;
+    const breathSwell = mode === "breath" ? 0.88 + breathValue * 0.18 : 1;
+    const voiceBloom = mode === "voice" ? micLevel * 0.075 : 0;
     const modeBase =
-      mode === "voice" ? 0.043 : mode === "breath" ? 0.039 : mode === "listen" ? 0.034 : 0.014;
+      mode === "voice" ? 0.044 : mode === "breath" ? 0.04 : mode === "listen" ? 0.033 : 0.014;
     const targetGain =
       isJoined && !isMuted ? modeBase * (0.7 + force * 0.22 + voiceBloom) * breathSwell : 0;
 
     master.gain.cancelScheduledValues(now);
-    master.gain.setTargetAtTime(clamp(targetGain, 0, 0.058), now, 0.95);
-    highpass.frequency.setTargetAtTime(78 + force * 8, now, 1.5);
-    filter.frequency.setTargetAtTime(760 + force * 260 + micLevel * 70, now, 1.6);
-    filter.Q.setTargetAtTime(mode === "listen" ? 0.32 : 0.38, now, 1.4);
-    presence.frequency.setTargetAtTime(245 + Math.sin(now * 0.035) * 18, now, 1.8);
+    master.gain.setTargetAtTime(clamp(targetGain, 0, 0.062), now, 0.95);
+    highpass.frequency.setTargetAtTime(mode === "listen" ? 88 : 82 + force * 8, now, 1.5);
+    filter.frequency.setTargetAtTime(
+      820 + force * 230 + micLevel * 90 + (mode === "breath" ? breathValue * 85 : 0),
+      now,
+      1.6,
+    );
+    filter.Q.setTargetAtTime(mode === "listen" ? 0.28 : 0.34, now, 1.4);
+    presence.frequency.setTargetAtTime(285 + Math.sin(now * 0.035) * 22, now, 1.8);
+    presence.gain.setTargetAtTime(mode === "voice" ? 2.05 + micLevel * 0.6 : 1.65, now, 1.4);
 
     const shimmer = Math.sin(now * 0.048) * 0.62 + Math.sin(now * 0.013) * 0.85;
     voices.forEach((voice, index) => {
@@ -140,9 +145,10 @@ export function useAudioEngine(input: AudioInput) {
     master.connect(context.destination);
 
     const voiceSpec = [
-      { baseFrequency: 96.08, weight: 0.18, drift: 0.026, detuneDepth: 0.42, type: "sine" },
-      { baseFrequency: 144.12, weight: 0.14, drift: 0.021, detuneDepth: 0.36, type: "sine" },
-      { baseFrequency: 192.16, weight: 0.052, drift: 0.016, detuneDepth: 0.28, type: "triangle" },
+      { baseFrequency: 96.08, weight: 0.17, drift: 0.026, detuneDepth: 0.42, type: "sine" },
+      { baseFrequency: 144.12, weight: 0.15, drift: 0.021, detuneDepth: 0.36, type: "sine" },
+      { baseFrequency: 192.16, weight: 0.056, drift: 0.016, detuneDepth: 0.28, type: "triangle" },
+      { baseFrequency: 288.24, weight: 0.026, drift: 0.011, detuneDepth: 0.18, type: "sine" },
     ] satisfies Array<{
       baseFrequency: number;
       weight: number;

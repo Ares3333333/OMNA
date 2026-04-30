@@ -15,6 +15,7 @@ export function ModeSelector({ mode, microphoneStatus, onSelect }: ModeSelectorP
   const micUnavailable =
     mode === "voice" &&
     (microphoneStatus === "denied" || microphoneStatus === "unavailable");
+  const showVoicePrivacy = mode === "voice" && !micUnavailable;
 
   return (
     <motion.div
@@ -56,6 +57,12 @@ export function ModeSelector({ mode, microphoneStatus, onSelect }: ModeSelectorP
           >
             Перейти в режим Дышать
           </button>
+        </div>
+      ) : null}
+
+      {showVoicePrivacy ? (
+        <div className="omna-privacy-note">
+          Аудио не записывается и не отправляется. Используется только уровень громкости.
         </div>
       ) : null}
     </motion.div>
