@@ -1,0 +1,463 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: "Manrope", "Manrope Fallback", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Cormorant Garamond", "Times New Roman", serif;
+}
+
+:root {
+  color-scheme: dark;
+  background: #000204;
+  --foreground: #f4f8ff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: #000204;
+  color: var(--foreground);
+  font-family: var(--font-manrope);
+  text-rendering: geometricPrecision;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  background: rgba(99, 232, 255, 0.25);
+  color: #ffffff;
+}
+
+.mmatrix-frame {
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 50% 25%, rgba(8, 44, 102, 0.42), transparent 32rem),
+    radial-gradient(circle at 50% 48%, rgba(0, 28, 72, 0.4), transparent 52rem),
+    radial-gradient(ellipse at 50% 112%, rgba(0, 100, 190, 0.14), transparent 42%),
+    linear-gradient(180deg, #000204 0%, #010714 46%, #000204 100%);
+}
+
+.mmatrix-frame::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 33%, transparent 0 30%, rgba(0, 0, 0, 0.16) 68%, rgba(0, 0, 0, 0.74) 100%),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.62), transparent 18%, transparent 82%, rgba(0, 0, 0, 0.62));
+}
+
+.mmatrix-frame::after {
+  content: "";
+  position: absolute;
+  inset: auto -10vw -6vh -10vw;
+  z-index: 0;
+  height: 22vh;
+  pointer-events: none;
+  opacity: 0.34;
+  background:
+    radial-gradient(ellipse at 50% 100%, rgba(25, 142, 255, 0.38), transparent 58%),
+    repeating-radial-gradient(ellipse at 50% 120%, rgba(36, 159, 255, 0.22) 0 1px, transparent 1px 14px);
+  mask-image: linear-gradient(to top, black, transparent 88%);
+}
+
+.display-title {
+  font-family: var(--font-display);
+  font-weight: 500;
+}
+
+.mmatrix-stage {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  height: 100%;
+  min-height: 0;
+  flex-direction: column;
+  align-items: center;
+  padding: clamp(4.2rem, 7.8svh, 5.9rem) clamp(1.1rem, 4.8vw, 5.25rem)
+    clamp(0.8rem, 2.2svh, 1.55rem);
+}
+
+.mmatrix-stage::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  top: clamp(4.8rem, 9.5svh, 7.4rem);
+  left: 50%;
+  width: min(142vw, 92rem);
+  height: min(76svh, 48rem);
+  pointer-events: none;
+  transform: translateX(-50%);
+  background:
+    radial-gradient(ellipse at 50% 25%, rgba(54, 166, 255, 0.22), transparent 33%),
+    radial-gradient(ellipse at 50% 54%, rgba(18, 91, 196, 0.14), transparent 57%),
+    linear-gradient(180deg, transparent 0%, rgba(28, 118, 235, 0.115) 38%, rgba(8, 37, 95, 0.045) 68%, transparent 94%);
+  filter: blur(22px);
+  opacity: 0.92;
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 72%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 0%, black 72%, transparent 100%);
+}
+
+.mmatrix-stage > * {
+  position: relative;
+  z-index: 1;
+}
+
+.mmatrix-sphere-slot {
+  flex: 0 1 clamp(20rem, 50svh, 39rem);
+  width: min(128vw, 96rem);
+  min-height: 0;
+  overflow: visible;
+}
+
+.mmatrix-sphere {
+  position: relative;
+  left: 50%;
+  height: 100%;
+  width: min(152vw, 96rem);
+  margin: 0 auto;
+  transform: translateX(-50%);
+  -webkit-mask-image: radial-gradient(
+    ellipse at 50% 52%,
+    black 0%,
+    black 42%,
+    rgba(0, 0, 0, 0.88) 56%,
+    rgba(0, 0, 0, 0.36) 70%,
+    transparent 87%
+  );
+  mask-image: radial-gradient(
+    ellipse at 50% 48%,
+    black 0%,
+    black 42%,
+    rgba(0, 0, 0, 0.88) 56%,
+    rgba(0, 0, 0, 0.36) 70%,
+    transparent 87%
+  );
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
+
+.mmatrix-status {
+  margin-top: clamp(-0.16rem, -0.32svh, 0.16rem);
+  width: fit-content;
+  max-width: min(100%, 42rem);
+  border-radius: 999px;
+  border: 1px solid rgba(118, 190, 255, 0.1);
+  background: rgba(3, 14, 30, 0.18);
+  padding: clamp(0.26rem, 0.62svh, 0.45rem) clamp(0.62rem, 1.35vw, 0.95rem);
+  line-height: 1.25;
+  backdrop-filter: blur(18px);
+  box-shadow: inset 0 0 24px rgba(73, 170, 255, 0.035);
+}
+
+.mmatrix-status span:last-child {
+  min-width: 0;
+}
+
+.mmatrix-life-line {
+  margin-top: clamp(0.28rem, 0.75svh, 0.62rem);
+  border-radius: 999px;
+  border: 1px solid rgba(125, 190, 255, 0.12);
+  background: rgba(4, 15, 31, 0.26);
+  padding: clamp(0.24rem, 0.55svh, 0.42rem) clamp(0.65rem, 1.4vw, 1rem);
+  color: rgba(214, 235, 255, 0.5);
+  font-size: clamp(0.68rem, min(0.9vw, 1.55svh), 0.88rem);
+  line-height: 1.1;
+  text-align: center;
+  backdrop-filter: blur(16px);
+}
+
+.mmatrix-copy {
+  width: min(100%, 82rem);
+  margin-top: clamp(0.58rem, 1.45svh, 1.25rem);
+  text-align: center;
+}
+
+.mmatrix-title {
+  font-size: clamp(2.05rem, min(4.55vw, 5.85svh), 4.85rem);
+  line-height: 1.01;
+}
+
+.mmatrix-subtitle {
+  margin-top: clamp(0.38rem, 1.05svh, 0.82rem);
+  font-size: clamp(0.92rem, min(1.22vw, 2.05svh), 1.32rem);
+  line-height: 1.35;
+}
+
+.mmatrix-actions {
+  display: flex;
+  width: min(100%, 36rem);
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: clamp(0.72rem, 1.65svh, 1.22rem);
+}
+
+.mmatrix-stats-slot {
+  flex: 0 1 clamp(5.55rem, 12.5svh, 7.8rem);
+  width: min(100%, 64rem);
+  min-height: 0;
+  margin-top: auto;
+}
+
+.mmatrix-stage[data-joined="true"] .mmatrix-sphere-slot {
+  flex-basis: clamp(14.4rem, 36svh, 24rem);
+}
+
+.mmatrix-stage[data-joined="true"] .mmatrix-copy {
+  margin-top: clamp(0.55rem, 1.5vh, 1.1rem);
+}
+
+.mmatrix-stage[data-joined="true"] .mmatrix-title {
+  font-size: clamp(1.9rem, min(4.5vw, 5.7vh), 3.75rem);
+}
+
+.mmatrix-stage[data-joined="true"] .mmatrix-actions {
+  margin-top: clamp(0.45rem, 1.3vh, 0.9rem);
+}
+
+.mmatrix-stage[data-session="summary"] .mmatrix-title {
+  font-size: clamp(1.9rem, min(4.1vw, 5.4svh), 3.85rem);
+}
+
+.mmatrix-stage[data-session="summary"] .mmatrix-copy {
+  margin-top: clamp(0.32rem, 1svh, 0.8rem);
+}
+
+.mmatrix-ritual-note {
+  margin-top: clamp(0.55rem, 1.25svh, 0.9rem);
+  max-width: 100%;
+  color: rgba(191, 218, 245, 0.42);
+  font-size: clamp(0.68rem, min(0.88vw, 1.55svh), 0.86rem);
+  line-height: 1.2;
+  text-align: center;
+}
+
+.mmatrix-summary {
+  width: min(100%, 34rem);
+  border-radius: clamp(1rem, 2svh, 1.4rem);
+  border: 1px solid rgba(143, 197, 255, 0.16);
+  background: rgba(2, 11, 24, 0.48);
+  box-shadow:
+    inset 0 0 34px rgba(63, 159, 255, 0.07),
+    0 0 42px rgba(0, 0, 0, 0.24);
+  padding: clamp(0.8rem, 1.7svh, 1.15rem) clamp(0.95rem, 2.5vw, 1.35rem);
+  color: rgba(219, 236, 255, 0.62);
+  font-size: clamp(0.76rem, min(1.02vw, 1.75svh), 0.98rem);
+  line-height: 1.35;
+  text-align: center;
+  backdrop-filter: blur(18px);
+}
+
+.mmatrix-summary-main {
+  color: rgba(239, 248, 255, 0.9);
+}
+
+.mmatrix-summary-button {
+  min-height: 2.25rem;
+  border-radius: 999px;
+  border: 1px solid rgba(176, 220, 255, 0.18);
+  background: rgba(255, 255, 255, 0.025);
+  padding: 0 0.95rem;
+  color: rgba(229, 244, 255, 0.72);
+  font-size: clamp(0.72rem, 1vw, 0.86rem);
+  font-weight: 500;
+  transition:
+    border-color 180ms ease,
+    background 180ms ease,
+    color 180ms ease;
+}
+
+.mmatrix-summary-button:hover {
+  border-color: rgba(190, 233, 255, 0.42);
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.mmatrix-summary-button-primary {
+  border-color: rgba(103, 181, 255, 0.52);
+  background: rgba(20, 101, 205, 0.22);
+  color: rgba(246, 251, 255, 0.95);
+}
+
+@media (max-height: 790px) {
+  .mmatrix-stage {
+    padding-top: clamp(3.95rem, 7.8svh, 5.25rem);
+    padding-bottom: 0.52rem;
+  }
+
+  .mmatrix-sphere-slot {
+    flex-basis: clamp(13.6rem, 35.5svh, 22.5rem);
+  }
+
+  .mmatrix-title {
+    font-size: clamp(1.95rem, min(4.35vw, 5.55svh), 3.85rem);
+    line-height: 0.96;
+  }
+
+  .mmatrix-subtitle {
+    font-size: clamp(0.86rem, min(1.15vw, 2.05vh), 1.15rem);
+  }
+
+  .mmatrix-actions {
+    margin-top: clamp(0.65rem, 1.8vh, 1.05rem);
+  }
+
+  .mmatrix-stats-slot {
+    flex-basis: clamp(5.4rem, 12.8svh, 7.2rem);
+  }
+
+  .mmatrix-stage[data-joined="true"] .mmatrix-sphere-slot {
+    flex-basis: clamp(10.8rem, 28svh, 18.5rem);
+  }
+
+  .mmatrix-life-line {
+    margin-top: 0.32rem;
+  }
+
+  .mmatrix-ritual-note {
+    margin-top: 0.45rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .mmatrix-stage {
+    padding-inline: 0.9rem;
+  }
+
+  .mmatrix-sphere-slot {
+    flex-basis: clamp(15.6rem, 33svh, 20.5rem);
+    width: 128vw;
+  }
+
+  .mmatrix-sphere {
+    width: min(166vw, 48rem);
+  }
+
+  .mmatrix-copy {
+    width: 100%;
+    margin-top: clamp(0.35rem, 1svh, 0.85rem);
+  }
+
+  .mmatrix-title {
+    font-size: clamp(1.82rem, 8.75vw, 2.42rem);
+    line-height: 1.04;
+    margin-inline: auto;
+    max-width: calc(100vw - 2rem);
+    overflow-wrap: break-word;
+  }
+
+  .mmatrix-stage[data-session="intro"] .mmatrix-title {
+    max-width: 19.5rem;
+    font-size: clamp(1.3rem, 6.25vw, 1.66rem);
+    line-height: 1.12;
+  }
+
+  .mmatrix-stage[data-session="summary"] .mmatrix-title {
+    font-size: clamp(1.65rem, 8vw, 2.15rem);
+  }
+
+  .mmatrix-status {
+    width: auto;
+    max-width: 20.4rem;
+    margin-top: 0.02rem;
+    gap: 0.45rem;
+    padding: 0.28rem 0.66rem;
+    font-size: clamp(0.62rem, 2.9vw, 0.74rem);
+    line-height: 1.2;
+  }
+
+  .mmatrix-subtitle {
+    max-width: 19rem;
+    font-size: clamp(0.78rem, 3.7vw, 0.93rem);
+  }
+
+  .mmatrix-actions {
+    width: 100%;
+    max-width: 20rem;
+    margin-top: clamp(0.65rem, 1.5svh, 0.95rem);
+  }
+
+  .mmatrix-life-line {
+    max-width: calc(100vw - 2rem);
+    font-size: 0.66rem;
+  }
+
+  .mmatrix-summary {
+    padding: 0.72rem 0.75rem;
+    font-size: 0.72rem;
+    line-height: 1.28;
+  }
+
+  .mmatrix-summary-button {
+    min-height: 2.05rem;
+    padding-inline: 0.68rem;
+    font-size: 0.7rem;
+  }
+
+  .mmatrix-ritual-note {
+    max-width: 18rem;
+    font-size: 0.65rem;
+    line-height: 1.28;
+  }
+
+  .mmatrix-stats-slot {
+    width: 100%;
+    max-width: 17.25rem;
+    flex-basis: clamp(5.5rem, 11.6svh, 6.15rem);
+  }
+
+  .mmatrix-stats-panel {
+    min-height: 5.25rem;
+    border-radius: 1.05rem;
+  }
+
+  .mmatrix-stat-item {
+    padding-inline: 0.35rem;
+  }
+
+  .mmatrix-stat-glyph {
+    height: 0.95rem;
+    width: 1.55rem;
+  }
+
+  .mmatrix-stat-value {
+    margin-top: 0.26rem;
+    font-size: clamp(0.78rem, 3.45vw, 0.94rem);
+  }
+
+  .mmatrix-stat-label {
+    margin-top: 0.24rem;
+    font-size: clamp(0.38rem, 1.9vw, 0.5rem);
+    line-height: 1.05;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+  }
+}
