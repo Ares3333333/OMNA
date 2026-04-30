@@ -1,0 +1,50 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#000204"/>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <g opacity="0.8">
+    <circle cx="600" cy="286" r="210" fill="url(#halo)"/>
+    <circle cx="600" cy="286" r="128" fill="url(#core)" filter="url(#glow)"/>
+    <g opacity="0.55" stroke="#75DFFF" stroke-width="1.2">
+      <ellipse cx="600" cy="286" rx="174" ry="92" transform="rotate(8 600 286)"/>
+      <ellipse cx="600" cy="286" rx="184" ry="98" transform="rotate(32 600 286)"/>
+      <ellipse cx="600" cy="286" rx="164" ry="88" transform="rotate(-24 600 286)"/>
+      <ellipse cx="600" cy="286" rx="152" ry="78" transform="rotate(58 600 286)"/>
+    </g>
+    <g opacity="0.5">
+      <circle cx="566" cy="262" r="3" fill="#A8F7FF"/>
+      <circle cx="656" cy="241" r="2.5" fill="#53C9FF"/>
+      <circle cx="640" cy="331" r="2.5" fill="#A8F7FF"/>
+      <circle cx="536" cy="330" r="2" fill="#42A8FF"/>
+      <circle cx="600" cy="286" r="10" fill="#C8FDFF"/>
+    </g>
+  </g>
+  <text x="92" y="108" fill="#F5FAFF" font-family="Manrope, Arial, sans-serif" font-size="50" font-weight="300" letter-spacing="9">Omna</text>
+  <text x="600" y="500" text-anchor="middle" fill="#F4FAFF" font-family="Cormorant Garamond, Times New Roman, serif" font-size="70" font-weight="500">Живой звук, который держат люди</text>
+  <text x="600" y="552" text-anchor="middle" fill="#AFC7DE" font-family="Manrope, Arial, sans-serif" font-size="28" font-weight="400">Подключись голосом, дыханием или присутствием</text>
+  <defs>
+    <radialGradient id="bg" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(600 300) rotate(90) scale(390 640)">
+      <stop stop-color="#063576" stop-opacity="0.42"/>
+      <stop offset="0.48" stop-color="#02152F" stop-opacity="0.4"/>
+      <stop offset="1" stop-color="#000204" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="halo" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(600 286) rotate(90) scale(210)">
+      <stop stop-color="#5CE7FF" stop-opacity="0.34"/>
+      <stop offset="0.34" stop-color="#156BFF" stop-opacity="0.24"/>
+      <stop offset="1" stop-color="#000204" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="core" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(560 246) rotate(48) scale(224)">
+      <stop stop-color="#C9FCFF"/>
+      <stop offset="0.16" stop-color="#3FC7FF"/>
+      <stop offset="0.52" stop-color="#073BAA"/>
+      <stop offset="0.86" stop-color="#031447"/>
+      <stop offset="1" stop-color="#000412"/>
+    </radialGradient>
+    <filter id="glow" x="332" y="18" width="536" height="536" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="28" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+</svg>

@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { Volume2, VolumeX } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { AudioProfileSelector } from "@/components/AudioProfileSelector";
 import { BreathGuide } from "@/components/BreathGuide";
 import { LivingSphere } from "@/components/LivingSphere";
 import { ModeSelector } from "@/components/ModeSelector";
@@ -14,12 +15,16 @@ import { useBreathCycle } from "@/hooks/useBreathCycle";
 import { useEveningRitual } from "@/hooks/useEveningRitual";
 import { useGlobalRitualState } from "@/hooks/useGlobalRitualState";
 import { useMicrophoneLevel } from "@/hooks/useMicrophoneLevel";
+import { usePwaInstallPrompt } from "@/hooks/usePwaInstallPrompt";
+import { trackOmnaEvent } from "@/lib/analytics";
 import {
   formatRitualLife,
   formatSessionSeconds,
   formatSessionDurationWords,
 } from "@/lib/format";
-import { OmnaMode } from "@/lib/types";
+import { createSessionRitualTrace, SessionRitualTrace } from "@/lib/sessionRitual";
+import { createSessionShareImage } from "@/lib/shareCard";
+import { AudioProfile, OmnaMode } from "@/lib/types";
 
 const initialLifeSeconds = 18 * 60 * 60 + 24 * 60;
 const sessionGoalSeconds = 3 * 60;
@@ -27,6 +32,7 @@ const sessionGoalSeconds = 3 * 60;
 type SessionResult = {
   seconds: number;
   users: number;
+  trace: SessionRitualTrace;
 };
 
 export function MainPage() {
@@ -38,7 +44,11 @@ export function MainPage() {
   const [lastSession, setLastSession] = useState<SessionResult | null>(null);
   const [shareFeedback, setShareFeedback] = useState("");
   const [supportFeedback, setSupportFeedback] = useState("");
+  const [installFeedback, setInstallFeedback] = useState("");
+  const [audioProfile, setAudioProfile] = useState<AudioProfile>("soft");
+  const [sphereEventSeed, setSphereEventSeed] = useState(0);
   const eveningRitual = useEveningRitual();
+  const pwaInstall = usePwaInstallPrompt();
 
   const breath = useBreathCycle(isJoined && mode === "breath");
   const { micLevel, microphoneStatus } = useMicrophoneLevel(
@@ -49,6 +59,7 @@ export function MainPage() {
     mode,
     micLevel,
     breathValue: breath.breathValue,
+    isRitualLive: eveningRitual.isLive,
   });
   const audioEngine = useAudioEngine({
     isJoined,
@@ -58,7 +69,12 @@ export function MainPage() {
     micLevel,
     breathValue: breath.breathValue,
     isRitualLive: eveningRitual.isLive,
+    audioProfile,
   });
+
+  useEffect(() => {
+    trackOmnaEvent("view");
+  }, []);
 
   useEffect(() => {
     const interval = window.setInterval(() => {
@@ -123,6 +139,9 @@ export function MainPage() {
     setLastSession(null);
     setShareFeedback("");
     setSupportFeedback("");
+    setInstallFeedback("");
+    setSphereEventSeed((seed) => seed + 1);
+    trackOmnaEvent("join");
     void audioEngine.start();
   };
 
@@ -131,24 +150,47 @@ export function MainPage() {
     setLastSession(null);
     setSupportFeedback("");
     setMode(nextMode);
+    setSphereEventSeed((seed) => seed + 1);
+    trackOmnaEvent("mode_select", { mode: nextMode });
     void audioEngine.start();
   };
 
+  const changeAudioProfile = (nextProfile: AudioProfile) => {
+    setAudioProfile(nextProfile);
+    trackOmnaEvent("audio_profile_select", { profile: nextProfile });
+  };
+
   const disconnect = () => {
+    const trace = createSessionRitualTrace({
+      seconds: personalSeconds,
+      mode,
+      globalForce,
+    });
+
     setLastSession({
       seconds: personalSeconds,
       users: Math.round(globalUsers),
+      trace,
     });
     setMode("idle");
     setIsJoined(false);
     setPersonalSeconds(0);
     setShareFeedback("");
     setSupportFeedback("");
+    setInstallFeedback("");
+    setSphereEventSeed((seed) => seed + 1);
+    trackOmnaEvent("session_end", {
+      seconds: personalSeconds,
+      users: Math.round(globalUsers),
+      force: Math.round(globalForce),
+      completedGoal: trace.completedGoal,
+    });
     audioEngine.stop();
   };
 
   const toggleMute = () => {
     setIsMuted((muted) => !muted);
+    trackOmnaEvent("mute_toggle", { muted: !isMuted });
     if (isJoined) {
       void audioEngine.start();
     }
@@ -157,10 +199,30 @@ export function MainPage() {
   const invite = async () => {
     const url = window.location.href;
     const text = lastSession
-      ? `Я держал Omna ${formatSessionSeconds(lastSession.seconds)}. Моя волна осталась в общем звуке. Подключись: ${url}`
+      ? `Я держал Omna ${formatSessionSeconds(lastSession.seconds)}. Мой след: ${lastSession.trace.phrase}. Подключись: ${url}`
       : `Я сейчас в Omna — живом звуке, который держат люди. Подключись: ${url}`;
 
     try {
+      if (lastSession) {
+        const image = await createSessionShareImage({
+          seconds: lastSession.seconds,
+          users: lastSession.users,
+          trace: lastSession.trace,
+        });
+
+        if (image && navigator.canShare?.({ files: [image] })) {
+          await navigator.share({
+            title: "Omna",
+            text,
+            url,
+            files: [image],
+          });
+          setShareFeedback("Карточка сессии открыта для шаринга.");
+          trackOmnaEvent("share_image", { seconds: lastSession.seconds });
+          return;
+        }
+      }
+
       if (navigator.share) {
         await navigator.share({
           title: "Omna",
@@ -168,20 +230,31 @@ export function MainPage() {
           url,
         });
         setShareFeedback("Приглашение открыто.");
+        trackOmnaEvent("share_text", { hasSession: Boolean(lastSession) });
         return;
       }
 
       await navigator.clipboard.writeText(text);
       setShareFeedback("Текст приглашения скопирован.");
+      trackOmnaEvent("share_copy", { hasSession: Boolean(lastSession) });
     } catch {
       setShareFeedback("Не получилось поделиться автоматически.");
     }
   };
 
   const support = () => {
+    trackOmnaEvent("support_click");
     setSupportFeedback(
-      "Платежи пока не подключены. Самая сильная поддержка сейчас — позвать одного человека.",
+      "Платежи пока не подключены. Сейчас лучшая поддержка — позвать одного человека или вернуться на вечерний Ом.",
     );
+  };
+
+  const install = async () => {
+    const accepted = await pwaInstall.promptInstall();
+    setInstallFeedback(
+      accepted ? "Omna добавлена на экран." : "Можно добавить Omna позже после следующей сессии.",
+    );
+    trackOmnaEvent("pwa_install_prompt", { accepted });
   };
 
   const introTitle = lastSession
@@ -233,6 +306,7 @@ export function MainPage() {
           className="mmatrix-stage"
           data-joined={isJoined ? "true" : "false"}
           data-session={lastSession && !isJoined ? "summary" : isJoined ? "joined" : "intro"}
+          data-ritual-live={eveningRitual.isLive ? "true" : "false"}
         >
           <motion.div
             initial={false}
@@ -248,6 +322,8 @@ export function MainPage() {
                 breathValue={breath.breathValue}
                 globalForce={globalForce}
                 globalUsers={globalUsers}
+                isRitualLive={eveningRitual.isLive}
+                eventSeed={sphereEventSeed}
               />
             </div>
           </motion.div>
@@ -285,11 +361,15 @@ export function MainPage() {
               <SessionSummary
                 seconds={lastSession.seconds}
                 globalUsers={lastSession.users}
+                trace={lastSession.trace}
                 shareFeedback={shareFeedback}
                 supportFeedback={supportFeedback}
+                installFeedback={installFeedback}
+                canInstall={pwaInstall.canInstall}
                 onReturn={join}
                 onInvite={invite}
                 onSupport={support}
+                onInstall={install}
               />
             ) : (
               <>
@@ -310,6 +390,13 @@ export function MainPage() {
                     />
                   ) : null}
                 </AnimatePresence>
+
+                {isJoined ? (
+                  <AudioProfileSelector
+                    profile={audioProfile}
+                    onChange={changeAudioProfile}
+                  />
+                ) : null}
 
                 <AnimatePresence>
                   {isJoined && mode === "breath" ? (

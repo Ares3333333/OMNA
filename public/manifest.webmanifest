@@ -1,7 +1,7 @@
 {
   "name": "Omna",
   "short_name": "Omna",
-  "description": "Живой звук, который держат люди",
+  "description": "Живой коллективный звук, который держат люди",
   "lang": "ru",
   "start_url": "/",
   "scope": "/",

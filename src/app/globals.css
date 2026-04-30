@@ -114,6 +114,14 @@ button {
   mask-image: linear-gradient(to bottom, black 0%, black 72%, transparent 100%);
 }
 
+.mmatrix-stage[data-ritual-live="true"]::before {
+  background:
+    radial-gradient(ellipse at 50% 25%, rgba(72, 202, 255, 0.3), transparent 34%),
+    radial-gradient(ellipse at 50% 54%, rgba(24, 117, 232, 0.2), transparent 59%),
+    linear-gradient(180deg, transparent 0%, rgba(46, 157, 255, 0.14) 38%, rgba(8, 51, 114, 0.07) 70%, transparent 94%);
+  opacity: 1;
+}
+
 .mmatrix-stage > * {
   position: relative;
   z-index: 1;
@@ -330,6 +338,58 @@ button {
   transition: transform 160ms ease-out;
 }
 
+.omna-audio-profile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  width: min(100%, 22rem);
+  margin-top: clamp(0.38rem, 0.9svh, 0.62rem);
+  color: rgba(211, 234, 255, 0.48);
+  font-size: clamp(0.62rem, min(0.82vw, 1.4svh), 0.76rem);
+  line-height: 1;
+}
+
+.omna-audio-profile > span {
+  color: rgba(201, 226, 250, 0.42);
+}
+
+.omna-audio-profile > div {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.25rem;
+  width: min(15.5rem, 100%);
+  border-radius: 999px;
+  border: 1px solid rgba(125, 201, 255, 0.1);
+  background: rgba(4, 17, 35, 0.26);
+  padding: 0.2rem;
+  backdrop-filter: blur(16px);
+}
+
+.omna-audio-profile button {
+  min-height: 1.55rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(221, 240, 255, 0.52);
+  font-size: inherit;
+  line-height: 1;
+  transition:
+    background 180ms ease,
+    color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.omna-audio-profile button:hover {
+  color: rgba(241, 250, 255, 0.82);
+}
+
+.omna-audio-profile-active {
+  background: rgba(128, 221, 255, 0.16) !important;
+  color: rgba(245, 252, 255, 0.92) !important;
+  box-shadow: inset 0 0 16px rgba(113, 217, 255, 0.08);
+}
+
 .omna-session-goal {
   width: min(100%, 22rem);
   margin-top: clamp(0.42rem, 1svh, 0.72rem);
@@ -401,6 +461,33 @@ button {
   box-shadow: inset 0 0 28px rgba(80, 169, 255, 0.045);
 }
 
+.omna-ritual-trace {
+  width: min(100%, 21rem);
+  margin: 0 auto clamp(0.48rem, 1svh, 0.74rem);
+  border-radius: 0.95rem;
+  border: 1px solid rgba(102, 188, 255, 0.1);
+  background: rgba(4, 18, 38, 0.26);
+  padding: 0.5rem 0.72rem;
+  box-shadow: inset 0 0 24px rgba(75, 177, 255, 0.035);
+}
+
+.omna-ritual-trace span,
+.omna-ritual-trace small {
+  display: block;
+  color: rgba(210, 234, 255, 0.46);
+  font-size: clamp(0.56rem, min(0.78vw, 1.35svh), 0.68rem);
+  line-height: 1.2;
+}
+
+.omna-ritual-trace strong {
+  display: block;
+  margin-block: 0.1rem;
+  color: rgba(228, 246, 255, 0.86);
+  font-size: clamp(0.86rem, min(1.3vw, 2.1svh), 1.08rem);
+  font-weight: 500;
+  line-height: 1.1;
+}
+
 .omna-share-card span,
 .omna-share-card small {
   display: block;
@@ -448,6 +535,12 @@ button {
 
 .mmatrix-summary-button-quiet {
   color: rgba(202, 226, 245, 0.54);
+}
+
+.mmatrix-summary-button-install {
+  border-color: rgba(94, 212, 255, 0.32);
+  background: rgba(45, 157, 255, 0.11);
+  color: rgba(220, 246, 255, 0.82);
 }
 
 @media (max-height: 790px) {
@@ -573,6 +666,21 @@ button {
   .omna-share-card {
     max-width: 15.6rem;
     padding-block: 0.52rem;
+  }
+
+  .omna-ritual-trace {
+    max-width: 16.2rem;
+    padding-block: 0.44rem;
+  }
+
+  .omna-audio-profile {
+    max-width: 18.5rem;
+    gap: 0.38rem;
+    font-size: 0.66rem;
+  }
+
+  .omna-audio-profile button {
+    min-height: 1.42rem;
   }
 
   .omna-session-goal {

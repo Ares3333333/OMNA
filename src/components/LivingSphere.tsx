@@ -11,6 +11,8 @@ type LivingSphereProps = {
   breathValue: number;
   globalForce: number;
   globalUsers: number;
+  isRitualLive: boolean;
+  eventSeed: number;
 };
 
 type Particle = {
@@ -63,6 +65,8 @@ export function LivingSphere(props: LivingSphereProps) {
     let height = 0;
     let dpr = 1;
     let smoothedVoice = 0;
+    let lastEventSeed = propsRef.current.eventSeed;
+    let eventStartedAt = -99;
 
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
@@ -87,15 +91,24 @@ export function LivingSphere(props: LivingSphereProps) {
         breathValue,
         globalForce,
         globalUsers,
+        isRitualLive,
+        eventSeed,
       } = propsRef.current;
 
       context.clearRect(0, 0, width, height);
+      if (eventSeed !== lastEventSeed) {
+        lastEventSeed = eventSeed;
+        eventStartedAt = time;
+      }
 
       const centerX = width / 2;
       const centerY = height * 0.52;
       const minSide = Math.min(width, height);
       const force = clamp(globalForce / 100, 0, 1);
       const userDensity = clamp(globalUsers / 800, 0.04, 1);
+      const ritualLift = isRitualLive ? 1 : 0;
+      const eventProgress = clamp((time - eventStartedAt) / 3.8, 0, 1);
+      const eventEnergy = eventProgress < 1 ? Math.sin(eventProgress * Math.PI) : 0;
       const slowBreath = 0.5 + Math.sin(time * 0.54) * 0.5;
       const breath = mode === "breath" ? breathValue : slowBreath;
       const targetVoice = mode === "voice" ? micLevel : 0;
@@ -105,12 +118,22 @@ export function LivingSphere(props: LivingSphereProps) {
       const joinedLift = isJoined ? 0.014 : 0;
       const radius =
         minSide *
-        (0.405 + force * 0.024 + breath * 0.018 + voiceEnergy * 0.03 + joinedLift) *
+        (0.405 +
+          force * 0.024 +
+          breath * 0.018 +
+          voiceEnergy * 0.03 +
+          joinedLift +
+          ritualLift * 0.018 +
+          eventEnergy * 0.012) *
         listenCalm;
-      const brightness = clamp(0.72 + force * 0.38 + voiceEnergy * 0.46, 0.58, 1.48);
+      const brightness = clamp(
+        0.72 + force * 0.38 + voiceEnergy * 0.46 + ritualLift * 0.16 + eventEnergy * 0.18,
+        0.58,
+        1.58,
+      );
 
-      drawDottedRibbons(context, width, height, time, force);
-      drawAmbientField(context, centerX, centerY, radius, force, time);
+      drawDottedRibbons(context, width, height, time, force + ritualLift * 0.14);
+      drawAmbientField(context, centerX, centerY, radius, force, time, ritualLift);
       drawOuterParticles(context, centerX, centerY, radius, time, userDensity, brightness);
       drawOrbitalThreads(context, centerX, centerY, radius, time, force, voiceEnergy);
       drawResonanceRings(context, centerX, centerY, radius, time, force, voiceEnergy, mode);
@@ -126,6 +149,7 @@ export function LivingSphere(props: LivingSphereProps) {
         voiceEnergy,
         brightness,
       );
+      drawMicroEventBurst(context, centerX, centerY, radius, time, eventEnergy, lastEventSeed);
       applyCanvasSoftMask(context, width, height);
 
       frame = requestAnimationFrame(render);
@@ -231,6 +255,7 @@ function drawAmbientField(
   radius: number,
   force: number,
   time: number,
+  ritualLift: number,
 ) {
   context.save();
   context.globalCompositeOperation = "screen";
@@ -243,8 +268,8 @@ function drawAmbientField(
     centerY,
     radius * (3.25 + force * 0.42),
   );
-  field.addColorStop(0, `rgba(41, 153, 255, ${0.16 + force * 0.16})`);
-  field.addColorStop(0.26, `rgba(12, 62, 170, ${0.14 + force * 0.09})`);
+  field.addColorStop(0, `rgba(41, 153, 255, ${0.16 + force * 0.16 + ritualLift * 0.08})`);
+  field.addColorStop(0.26, `rgba(12, 62, 170, ${0.14 + force * 0.09 + ritualLift * 0.05})`);
   field.addColorStop(0.58, "rgba(2, 22, 61, 0.1)");
   field.addColorStop(1, "rgba(0, 0, 0, 0)");
   context.fillStyle = field;
@@ -268,6 +293,26 @@ function drawAmbientField(
       Math.PI * 2,
     );
     context.stroke();
+  }
+
+  if (ritualLift > 0) {
+    for (let index = 0; index < 18; index += 1) {
+      const progress = index / 17;
+      const ringRadius = radius * (1.28 + progress * 2.15);
+      context.strokeStyle = `rgba(107, 220, 255, ${0.038 * (1 - progress)})`;
+      context.lineWidth = 0.55;
+      context.beginPath();
+      context.ellipse(
+        centerX,
+        centerY,
+        ringRadius,
+        ringRadius * (0.52 + Math.sin(time * 0.04 + index) * 0.028),
+        -time * 0.015 + index * 0.17,
+        0,
+        Math.PI * 2,
+      );
+      context.stroke();
+    }
   }
 
   context.restore();
@@ -810,6 +855,55 @@ function drawCentralPulse(
     context.lineWidth = ray % 6 === 0 ? 0.95 : 0.46;
     context.stroke();
   }
+}
+
+function drawMicroEventBurst(
+  context: CanvasRenderingContext2D,
+  centerX: number,
+  centerY: number,
+  radius: number,
+  time: number,
+  eventEnergy: number,
+  eventSeed: number,
+) {
+  if (eventEnergy <= 0.001) {
+    return;
+  }
+
+  context.save();
+  context.globalCompositeOperation = "screen";
+
+  for (let index = 0; index < 36; index += 1) {
+    const seed = eventSeed * 13.7 + index * 29.3;
+    const angle = seeded(seed) * Math.PI * 2 + time * 0.08;
+    const distance = radius * (0.58 + seeded(seed + 11.2) * 1.15) * (0.78 + eventEnergy * 0.38);
+    const x = centerX + Math.cos(angle) * distance;
+    const y = centerY + Math.sin(angle) * distance * 0.76;
+    const size = 1.2 + seeded(seed + 4.2) * 2.8;
+    const alpha = eventEnergy * (0.16 + seeded(seed + 7.9) * 0.24);
+
+    context.fillStyle = `rgba(141, 234, 255, ${alpha})`;
+    context.shadowColor = "rgba(80, 201, 255, 0.92)";
+    context.shadowBlur = size * 8;
+    context.beginPath();
+    context.arc(x, y, size * (0.65 + eventEnergy * 0.55), 0, Math.PI * 2);
+    context.fill();
+  }
+
+  context.strokeStyle = `rgba(122, 225, 255, ${0.12 * eventEnergy})`;
+  context.lineWidth = 0.8 + eventEnergy * 1.2;
+  context.beginPath();
+  context.ellipse(
+    centerX,
+    centerY,
+    radius * (1.25 + eventEnergy * 0.75),
+    radius * (0.78 + eventEnergy * 0.34),
+    time * 0.04,
+    0,
+    Math.PI * 2,
+  );
+  context.stroke();
+  context.restore();
 }
 
 function createBlobPath(

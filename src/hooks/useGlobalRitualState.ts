@@ -8,6 +8,7 @@ type GlobalRitualInput = {
   mode: OmnaMode;
   micLevel: number;
   breathValue: number;
+  isRitualLive: boolean;
 };
 
 export type GlobalRitualState = {

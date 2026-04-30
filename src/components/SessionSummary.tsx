@@ -6,25 +6,34 @@ import {
   formatSessionDurationWords,
   formatSessionSeconds,
 } from "@/lib/format";
+import { SessionRitualTrace } from "@/lib/sessionRitual";
 
 type SessionSummaryProps = {
   seconds: number;
   globalUsers: number;
+  trace: SessionRitualTrace;
   shareFeedback: string;
   supportFeedback: string;
+  installFeedback: string;
+  canInstall: boolean;
   onReturn: () => void;
   onInvite: () => void;
   onSupport: () => void;
+  onInstall: () => void;
 };
 
 export function SessionSummary({
   seconds,
   globalUsers,
+  trace,
   shareFeedback,
   supportFeedback,
+  installFeedback,
+  canInstall,
   onReturn,
   onInvite,
   onSupport,
+  onInstall,
 }: SessionSummaryProps) {
   return (
     <motion.div
@@ -37,7 +46,16 @@ export function SessionSummary({
       <div className="omna-share-card" aria-label="Карточка сессии">
         <span>Я держал Omna</span>
         <strong>{formatSessionSeconds(seconds)}</strong>
-        <small>моя волна осталась в общем звуке</small>
+        <small>{trace.phrase}</small>
+      </div>
+      <div className="omna-ritual-trace">
+        <span>След {trace.traceId}</span>
+        <strong>{trace.resonance}% резонанса</strong>
+        <small>
+          {trace.completedGoal
+            ? "трёхминутный ритуал завершён"
+            : "волна осталась в общем звуке"}
+        </small>
       </div>
       <p className="mmatrix-summary-main">
         Ты поддерживал Omna {formatSessionDurationWords(seconds)}.
@@ -68,6 +86,15 @@ export function SessionSummary({
         >
           Поддержать Omna
         </button>
+        {canInstall ? (
+          <button
+            type="button"
+            onClick={onInstall}
+            className="mmatrix-summary-button mmatrix-summary-button-install"
+          >
+            Добавить на экран
+          </button>
+        ) : null}
       </div>
 
       {shareFeedback ? (
@@ -75,6 +102,9 @@ export function SessionSummary({
       ) : null}
       {supportFeedback ? (
         <div className="mt-2 text-[11px] text-cyan-100/52">{supportFeedback}</div>
+      ) : null}
+      {installFeedback ? (
+        <div className="mt-2 text-[11px] text-cyan-100/52">{installFeedback}</div>
       ) : null}
     </motion.div>
   );
