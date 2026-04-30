@@ -16,18 +16,24 @@ type AudioInput = {
 type EngineVoice = {
   oscillator: OscillatorNode;
   gain: GainNode;
+  panner: StereoPannerNode;
   baseFrequency: number;
   weight: number;
   drift: number;
   detuneDepth: number;
+  breathRate: number;
+  phase: number;
 };
 
 type Engine = {
   context: AudioContext;
   master: GainNode;
+  choirBus: GainNode;
   highpass: BiquadFilterNode;
+  body: BiquadFilterNode;
+  nasal: BiquadFilterNode;
+  mouth: BiquadFilterNode;
   filter: BiquadFilterNode;
-  presence: BiquadFilterNode;
   voices: EngineVoice[];
 };
 
@@ -53,43 +59,51 @@ export function useAudioEngine(input: AudioInput) {
       return;
     }
 
-    const { context, master, highpass, filter, presence, voices } = engine;
+    const { context, master, choirBus, highpass, body, nasal, mouth, filter, voices } = engine;
     const { isJoined, isMuted, mode, globalForce, micLevel, breathValue } =
       inputRef.current;
     const now = context.currentTime;
     const force = clamp(globalForce / 100, 0, 1);
-    const breathSwell = mode === "breath" ? 0.88 + breathValue * 0.18 : 1;
-    const voiceBloom = mode === "voice" ? micLevel * 0.075 : 0;
+    const collectiveBreath = 0.94 + Math.sin(now * 0.155) * 0.045 + Math.sin(now * 0.047) * 0.026;
+    const breathSwell = mode === "breath" ? 0.82 + breathValue * 0.26 : collectiveBreath;
+    const voiceBloom = mode === "voice" ? micLevel * 0.095 : 0;
     const modeBase =
-      mode === "voice" ? 0.044 : mode === "breath" ? 0.04 : mode === "listen" ? 0.033 : 0.014;
+      mode === "voice" ? 0.052 : mode === "breath" ? 0.047 : mode === "listen" ? 0.039 : 0.016;
     const targetGain =
-      isJoined && !isMuted ? modeBase * (0.7 + force * 0.22 + voiceBloom) * breathSwell : 0;
+      isJoined && !isMuted ? modeBase * (0.72 + force * 0.24 + voiceBloom) * breathSwell : 0;
 
     master.gain.cancelScheduledValues(now);
-    master.gain.setTargetAtTime(clamp(targetGain, 0, 0.062), now, 0.95);
-    highpass.frequency.setTargetAtTime(mode === "listen" ? 88 : 82 + force * 8, now, 1.5);
+    master.gain.setTargetAtTime(clamp(targetGain, 0, 0.074), now, 0.95);
+    choirBus.gain.setTargetAtTime(0.72 + force * 0.16 + (mode === "voice" ? micLevel * 0.12 : 0), now, 1.4);
+    highpass.frequency.setTargetAtTime(mode === "listen" ? 76 : 70 + force * 7, now, 1.5);
+    body.frequency.setTargetAtTime(128 + Math.sin(now * 0.041) * 8, now, 1.8);
+    body.gain.setTargetAtTime(2.6 + force * 0.5, now, 1.8);
+    nasal.frequency.setTargetAtTime(265 + Math.sin(now * 0.033) * 18 + micLevel * 18, now, 1.6);
+    nasal.gain.setTargetAtTime(mode === "voice" ? 6.2 + micLevel * 1.8 : 5.4 + force * 0.6, now, 1.4);
+    mouth.frequency.setTargetAtTime(720 + Math.sin(now * 0.026) * 54, now, 1.9);
+    mouth.gain.setTargetAtTime(mode === "listen" ? 1.35 : 1.8 + force * 0.35, now, 1.7);
     filter.frequency.setTargetAtTime(
-      820 + force * 230 + micLevel * 90 + (mode === "breath" ? breathValue * 85 : 0),
+      980 + force * 180 + micLevel * 110 + (mode === "breath" ? breathValue * 95 : 0),
       now,
       1.6,
     );
-    filter.Q.setTargetAtTime(mode === "listen" ? 0.28 : 0.34, now, 1.4);
-    presence.frequency.setTargetAtTime(285 + Math.sin(now * 0.035) * 22, now, 1.8);
-    presence.gain.setTargetAtTime(mode === "voice" ? 2.05 + micLevel * 0.6 : 1.65, now, 1.4);
+    filter.Q.setTargetAtTime(mode === "listen" ? 0.5 : 0.62, now, 1.4);
 
-    const shimmer = Math.sin(now * 0.048) * 0.62 + Math.sin(now * 0.013) * 0.85;
+    const shimmer = Math.sin(now * 0.031) * 0.18 + Math.sin(now * 0.011) * 0.28;
     voices.forEach((voice, index) => {
-      const wave = Math.sin(now * voice.drift + index) * voice.detuneDepth;
-      const voiceLift = mode === "voice" ? micLevel * voice.detuneDepth * 0.22 : 0;
+      const humanBreath = 0.78 + Math.sin(now * voice.breathRate + voice.phase) * 0.18;
+      const nearCrowd = 0.96 + Math.sin(now * (voice.drift * 0.43) + index * 1.7) * 0.035;
+      const wave = Math.sin(now * voice.drift + voice.phase) * voice.detuneDepth;
+      const voiceLift = mode === "voice" ? micLevel * voice.detuneDepth * 0.16 : 0;
       voice.oscillator.frequency.setTargetAtTime(
         voice.baseFrequency + wave + shimmer + voiceLift,
         now,
-        1.25,
+        1.35,
       );
       voice.gain.gain.setTargetAtTime(
-        voice.weight * (0.86 + force * 0.1 + breathValue * 0.03),
+        voice.weight * humanBreath * nearCrowd * (0.9 + force * 0.13 + breathValue * 0.035),
         now,
-        1.1,
+        1.25,
       );
     });
 
@@ -116,70 +130,111 @@ export function useAudioEngine(input: AudioInput) {
 
     const context = new AudioContextClass();
     const master = context.createGain();
+    const choirBus = context.createGain();
     const highpass = context.createBiquadFilter();
+    const body = context.createBiquadFilter();
+    const nasal = context.createBiquadFilter();
+    const mouth = context.createBiquadFilter();
     const filter = context.createBiquadFilter();
-    const presence = context.createBiquadFilter();
     const compressor = context.createDynamicsCompressor();
 
     master.gain.value = 0;
+    choirBus.gain.value = 0.68;
     highpass.type = "highpass";
-    highpass.frequency.value = 78;
-    highpass.Q.value = 0.62;
+    highpass.frequency.value = 72;
+    highpass.Q.value = 0.48;
+    body.type = "peaking";
+    body.frequency.value = 128;
+    body.Q.value = 0.78;
+    body.gain.value = 2.6;
+    nasal.type = "peaking";
+    nasal.frequency.value = 265;
+    nasal.Q.value = 1.35;
+    nasal.gain.value = 5.4;
+    mouth.type = "peaking";
+    mouth.frequency.value = 720;
+    mouth.Q.value = 0.75;
+    mouth.gain.value = 1.7;
     filter.type = "lowpass";
-    filter.frequency.value = 840;
-    filter.Q.value = 0.34;
-    presence.type = "peaking";
-    presence.frequency.value = 250;
-    presence.Q.value = 0.55;
-    presence.gain.value = 1.6;
-    compressor.threshold.value = -28;
-    compressor.knee.value = 30;
-    compressor.ratio.value = 1.45;
-    compressor.attack.value = 0.09;
-    compressor.release.value = 0.9;
+    filter.frequency.value = 980;
+    filter.Q.value = 0.55;
+    compressor.threshold.value = -25;
+    compressor.knee.value = 32;
+    compressor.ratio.value = 1.65;
+    compressor.attack.value = 0.12;
+    compressor.release.value = 1.1;
 
-    highpass.connect(filter);
-    filter.connect(presence);
-    presence.connect(compressor);
+    choirBus.connect(highpass);
+    highpass.connect(body);
+    body.connect(nasal);
+    nasal.connect(mouth);
+    mouth.connect(filter);
+    filter.connect(compressor);
     compressor.connect(master);
     master.connect(context.destination);
 
-    const voiceSpec = [
-      { baseFrequency: 96.08, weight: 0.17, drift: 0.026, detuneDepth: 0.42, type: "sine" },
-      { baseFrequency: 144.12, weight: 0.15, drift: 0.021, detuneDepth: 0.36, type: "sine" },
-      { baseFrequency: 192.16, weight: 0.056, drift: 0.016, detuneDepth: 0.28, type: "triangle" },
-      { baseFrequency: 288.24, weight: 0.026, drift: 0.011, detuneDepth: 0.18, type: "sine" },
-    ] satisfies Array<{
-      baseFrequency: number;
-      weight: number;
-      drift: number;
-      detuneDepth: number;
-      type: OscillatorType;
-    }>;
+    const choirRoots = [86.2, 92.7, 96.1, 101.4, 108.2, 114.4, 121.6, 128.1, 136.2];
+    const voiceSpec = choirRoots.flatMap((root, rootIndex) => {
+      const octaveWeight = rootIndex < 3 ? 0.028 : rootIndex < 7 ? 0.024 : 0.018;
+
+      return [
+        {
+          baseFrequency: root,
+          weight: octaveWeight,
+          drift: 0.014 + rootIndex * 0.0017,
+          detuneDepth: 0.18 + rootIndex * 0.012,
+          type: "sine" as OscillatorType,
+        },
+        {
+          baseFrequency: root * 2.01,
+          weight: octaveWeight * 0.42,
+          drift: 0.011 + rootIndex * 0.0013,
+          detuneDepth: 0.12 + rootIndex * 0.007,
+          type: rootIndex % 3 === 0 ? ("triangle" as OscillatorType) : ("sine" as OscillatorType),
+        },
+      ];
+    });
 
     const voices = voiceSpec.map((voice, index) => {
       const oscillator = context.createOscillator();
       const gain = context.createGain();
+      const panner = context.createStereoPanner();
+      const spread = ((index % 9) - 4) / 7.5;
 
       oscillator.type = voice.type;
-      oscillator.frequency.value = voice.baseFrequency + index * 0.4;
-      oscillator.detune.value = index % 2 === 0 ? -1.4 : 1.6;
+      oscillator.frequency.value = voice.baseFrequency + Math.sin(index * 12.9898) * 0.9;
+      oscillator.detune.value = Math.sin(index * 78.233) * 7.5;
       gain.gain.value = 0;
+      panner.pan.value = spread;
       oscillator.connect(gain);
-      gain.connect(highpass);
+      gain.connect(panner);
+      panner.connect(choirBus);
       oscillator.start();
 
       return {
         oscillator,
         gain,
+        panner,
         baseFrequency: voice.baseFrequency,
         weight: voice.weight,
         drift: voice.drift,
         detuneDepth: voice.detuneDepth,
+        breathRate: 0.12 + (index % 7) * 0.013,
+        phase: index * 1.913,
       };
     });
 
-    engineRef.current = { context, master, highpass, filter, presence, voices };
+    engineRef.current = {
+      context,
+      master,
+      choirBus,
+      highpass,
+      body,
+      nasal,
+      mouth,
+      filter,
+      voices,
+    };
     await context.resume();
     setIsReady(true);
     cancelAnimationFrame(frameRef.current);
