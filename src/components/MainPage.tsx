@@ -45,7 +45,7 @@ export function MainPage() {
   const [shareFeedback, setShareFeedback] = useState("");
   const [supportFeedback, setSupportFeedback] = useState("");
   const [installFeedback, setInstallFeedback] = useState("");
-  const [audioProfile, setAudioProfile] = useState<AudioProfile>("soft");
+  const [audioProfile, setAudioProfile] = useState<AudioProfile>("choir");
   const [sphereEventSeed, setSphereEventSeed] = useState(0);
   const eveningRitual = useEveningRitual();
   const pwaInstall = usePwaInstallPrompt();
