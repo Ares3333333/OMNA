@@ -1,22 +1,30 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { formatPeople, formatSessionDurationWords } from "@/lib/format";
+import {
+  formatPeople,
+  formatSessionDurationWords,
+  formatSessionSeconds,
+} from "@/lib/format";
 
 type SessionSummaryProps = {
   seconds: number;
   globalUsers: number;
   shareFeedback: string;
+  supportFeedback: string;
   onReturn: () => void;
   onInvite: () => void;
+  onSupport: () => void;
 };
 
 export function SessionSummary({
   seconds,
   globalUsers,
   shareFeedback,
+  supportFeedback,
   onReturn,
   onInvite,
+  onSupport,
 }: SessionSummaryProps) {
   return (
     <motion.div
@@ -26,6 +34,11 @@ export function SessionSummary({
       aria-label="Итог сессии"
     >
       <SessionTrace seconds={seconds} />
+      <div className="omna-share-card" aria-label="Карточка сессии">
+        <span>Я держал Omna</span>
+        <strong>{formatSessionSeconds(seconds)}</strong>
+        <small>моя волна осталась в общем звуке</small>
+      </div>
       <p className="mmatrix-summary-main">
         Ты поддерживал Omna {formatSessionDurationWords(seconds)}.
       </p>
@@ -33,7 +46,7 @@ export function SessionSummary({
       <p>Твоя волна осталась в Omna.</p>
       <p>Сейчас Omna держат {formatPeople(globalUsers)} человек.</p>
 
-      <div className="mt-3 flex w-full items-center justify-center gap-2 sm:mt-4">
+      <div className="mmatrix-summary-actions mt-3 flex w-full items-center justify-center gap-2 sm:mt-4">
         <button
           type="button"
           onClick={onReturn}
@@ -48,10 +61,20 @@ export function SessionSummary({
         >
           Позвать человека
         </button>
+        <button
+          type="button"
+          onClick={onSupport}
+          className="mmatrix-summary-button mmatrix-summary-button-quiet"
+        >
+          Поддержать Omna
+        </button>
       </div>
 
       {shareFeedback ? (
         <div className="mt-2 text-[11px] text-cyan-100/52">{shareFeedback}</div>
+      ) : null}
+      {supportFeedback ? (
+        <div className="mt-2 text-[11px] text-cyan-100/52">{supportFeedback}</div>
       ) : null}
     </motion.div>
   );

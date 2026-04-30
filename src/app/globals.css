@@ -280,6 +280,83 @@ button {
   backdrop-filter: blur(16px);
 }
 
+.omna-voice-calibration {
+  width: 100%;
+  border-radius: 0.95rem;
+  border: 1px solid rgba(135, 205, 255, 0.12);
+  background: rgba(4, 17, 35, 0.34);
+  padding: 0.52rem 0.66rem;
+  color: rgba(216, 238, 255, 0.62);
+  backdrop-filter: blur(16px);
+}
+
+.omna-voice-calibration-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-size: clamp(0.62rem, min(0.86vw, 1.45svh), 0.76rem);
+  line-height: 1.1;
+}
+
+.omna-voice-calibration-row strong {
+  color: rgba(235, 249, 255, 0.86);
+  font-weight: 600;
+}
+
+.omna-voice-meter {
+  position: relative;
+  height: 0.24rem;
+  margin-top: 0.48rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(133, 197, 255, 0.12);
+}
+
+.omna-voice-meter-good {
+  position: absolute;
+  inset: 0 28% 0 18%;
+  border-radius: inherit;
+  background: rgba(121, 237, 255, 0.16);
+}
+
+.omna-voice-meter-fill {
+  height: 100%;
+  width: 100%;
+  transform-origin: left center;
+  border-radius: inherit;
+  background: linear-gradient(90deg, rgba(28, 119, 255, 0.55), rgba(125, 239, 255, 0.88));
+  box-shadow: 0 0 16px rgba(85, 207, 255, 0.28);
+  transition: transform 160ms ease-out;
+}
+
+.omna-session-goal {
+  width: min(100%, 22rem);
+  margin-top: clamp(0.42rem, 1svh, 0.72rem);
+  color: rgba(211, 234, 255, 0.5);
+  font-size: clamp(0.64rem, min(0.86vw, 1.45svh), 0.78rem);
+  line-height: 1.15;
+  text-align: center;
+}
+
+.omna-session-goal-track {
+  height: 0.2rem;
+  margin-top: 0.42rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(111, 177, 255, 0.1);
+}
+
+.omna-session-goal-fill {
+  height: 100%;
+  width: 100%;
+  transform-origin: left center;
+  border-radius: inherit;
+  background: linear-gradient(90deg, rgba(34, 125, 255, 0.62), rgba(112, 237, 255, 0.78));
+  box-shadow: 0 0 18px rgba(76, 196, 255, 0.22);
+  transition: transform 420ms ease;
+}
+
 .mmatrix-summary {
   width: min(100%, 34rem);
   border-radius: clamp(1rem, 2svh, 1.4rem);
@@ -300,6 +377,10 @@ button {
   color: rgba(239, 248, 255, 0.9);
 }
 
+.mmatrix-summary-actions {
+  flex-wrap: wrap;
+}
+
 .omna-session-trace {
   margin: 0 auto clamp(0.28rem, 0.8svh, 0.48rem);
   height: clamp(1.7rem, 4svh, 2.6rem);
@@ -308,8 +389,38 @@ button {
   filter: drop-shadow(0 0 16px rgba(48, 177, 255, 0.12));
 }
 
+.omna-share-card {
+  width: min(100%, 19rem);
+  margin: 0 auto clamp(0.45rem, 1svh, 0.72rem);
+  border-radius: 1rem;
+  border: 1px solid rgba(123, 199, 255, 0.13);
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(67, 179, 255, 0.17), transparent 62%),
+    rgba(2, 12, 26, 0.42);
+  padding: clamp(0.56rem, 1.1svh, 0.82rem) 0.75rem;
+  box-shadow: inset 0 0 28px rgba(80, 169, 255, 0.045);
+}
+
+.omna-share-card span,
+.omna-share-card small {
+  display: block;
+  color: rgba(217, 237, 255, 0.5);
+  font-size: clamp(0.58rem, min(0.82vw, 1.4svh), 0.72rem);
+  line-height: 1.2;
+}
+
+.omna-share-card strong {
+  display: block;
+  margin-block: 0.12rem;
+  color: rgba(244, 251, 255, 0.96);
+  font-size: clamp(1.2rem, min(2vw, 3.4svh), 1.8rem);
+  font-weight: 300;
+  line-height: 1;
+}
+
 .mmatrix-summary-button {
   min-height: 2.25rem;
+  flex: 0 1 auto;
   border-radius: 999px;
   border: 1px solid rgba(176, 220, 255, 0.18);
   background: rgba(255, 255, 255, 0.025);
@@ -317,6 +428,7 @@ button {
   color: rgba(229, 244, 255, 0.72);
   font-size: clamp(0.72rem, 1vw, 0.86rem);
   font-weight: 500;
+  white-space: nowrap;
   transition:
     border-color 180ms ease,
     background 180ms ease,
@@ -332,6 +444,10 @@ button {
   border-color: rgba(103, 181, 255, 0.52);
   background: rgba(20, 101, 205, 0.22);
   color: rgba(246, 251, 255, 0.95);
+}
+
+.mmatrix-summary-button-quiet {
+  color: rgba(202, 226, 245, 0.54);
 }
 
 @media (max-height: 790px) {
@@ -444,9 +560,23 @@ button {
   }
 
   .mmatrix-summary-button {
+    flex: 1 1 calc(50% - 0.35rem);
     min-height: 2.05rem;
     padding-inline: 0.68rem;
     font-size: 0.7rem;
+  }
+
+  .mmatrix-summary-button-quiet {
+    flex-basis: min(100%, 11.5rem);
+  }
+
+  .omna-share-card {
+    max-width: 15.6rem;
+    padding-block: 0.52rem;
+  }
+
+  .omna-session-goal {
+    width: min(100%, 18.5rem);
   }
 
   .mmatrix-ritual-note {

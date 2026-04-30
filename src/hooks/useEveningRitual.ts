@@ -12,15 +12,29 @@ type EveningRitual = {
 };
 
 export function useEveningRitual(): EveningRitual {
-  const [now, setNow] = useState(() => new Date());
+  const [now, setNow] = useState<Date | null>(null);
 
   useEffect(() => {
+    const firstTick = window.setTimeout(() => {
+      setNow(new Date());
+    }, 0);
     const interval = window.setInterval(() => {
       setNow(new Date());
     }, 1000);
 
-    return () => window.clearInterval(interval);
+    return () => {
+      window.clearTimeout(firstTick);
+      window.clearInterval(interval);
+    };
   }, []);
+
+  if (!now) {
+    return {
+      isLive: false,
+      label: "Общий вечерний Ом",
+      detail: "Каждый день в 22:00.",
+    };
+  }
 
   const start = new Date(now);
   start.setHours(ritualHour, 0, 0, 0);

@@ -16,11 +16,13 @@ import { useGlobalRitualState } from "@/hooks/useGlobalRitualState";
 import { useMicrophoneLevel } from "@/hooks/useMicrophoneLevel";
 import {
   formatRitualLife,
+  formatSessionSeconds,
   formatSessionDurationWords,
 } from "@/lib/format";
 import { OmnaMode } from "@/lib/types";
 
 const initialLifeSeconds = 18 * 60 * 60 + 24 * 60;
+const sessionGoalSeconds = 3 * 60;
 
 type SessionResult = {
   seconds: number;
@@ -35,6 +37,7 @@ export function MainPage() {
   const [lifeSeconds, setLifeSeconds] = useState(initialLifeSeconds);
   const [lastSession, setLastSession] = useState<SessionResult | null>(null);
   const [shareFeedback, setShareFeedback] = useState("");
+  const [supportFeedback, setSupportFeedback] = useState("");
   const eveningRitual = useEveningRitual();
 
   const breath = useBreathCycle(isJoined && mode === "breath");
@@ -54,6 +57,7 @@ export function MainPage() {
     globalForce,
     micLevel,
     breathValue: breath.breathValue,
+    isRitualLive: eveningRitual.isLive,
   });
 
   useEffect(() => {
@@ -118,12 +122,14 @@ export function MainPage() {
     setPersonalSeconds(0);
     setLastSession(null);
     setShareFeedback("");
+    setSupportFeedback("");
     void audioEngine.start();
   };
 
   const selectMode = (nextMode: Exclude<OmnaMode, "idle">) => {
     setIsJoined(true);
     setLastSession(null);
+    setSupportFeedback("");
     setMode(nextMode);
     void audioEngine.start();
   };
@@ -137,6 +143,7 @@ export function MainPage() {
     setIsJoined(false);
     setPersonalSeconds(0);
     setShareFeedback("");
+    setSupportFeedback("");
     audioEngine.stop();
   };
 
@@ -149,7 +156,9 @@ export function MainPage() {
 
   const invite = async () => {
     const url = window.location.href;
-    const text = `Я сейчас в Omna — живом звуке, который держат люди. Подключись: ${url}`;
+    const text = lastSession
+      ? `Я держал Omna ${formatSessionSeconds(lastSession.seconds)}. Моя волна осталась в общем звуке. Подключись: ${url}`
+      : `Я сейчас в Omna — живом звуке, который держат люди. Подключись: ${url}`;
 
     try {
       if (navigator.share) {
@@ -167,6 +176,12 @@ export function MainPage() {
     } catch {
       setShareFeedback("Не получилось поделиться автоматически.");
     }
+  };
+
+  const support = () => {
+    setSupportFeedback(
+      "Платежи пока не подключены. Самая сильная поддержка сейчас — позвать одного человека.",
+    );
   };
 
   const introTitle = lastSession
@@ -271,8 +286,10 @@ export function MainPage() {
                 seconds={lastSession.seconds}
                 globalUsers={lastSession.users}
                 shareFeedback={shareFeedback}
+                supportFeedback={supportFeedback}
                 onReturn={join}
                 onInvite={invite}
+                onSupport={support}
               />
             ) : (
               <>
@@ -288,6 +305,7 @@ export function MainPage() {
                       key="modes"
                       mode={mode}
                       microphoneStatus={microphoneStatus}
+                      micLevel={micLevel}
                       onSelect={selectMode}
                     />
                   ) : null}
@@ -298,6 +316,10 @@ export function MainPage() {
                     <BreathGuide key="breath" breath={breath} />
                   ) : null}
                 </AnimatePresence>
+
+                {isJoined ? (
+                  <SessionGoal seconds={personalSeconds} goalSeconds={sessionGoalSeconds} />
+                ) : null}
               </>
             )}
 
@@ -323,5 +345,32 @@ export function MainPage() {
         </section>
       </div>
     </main>
+  );
+}
+
+function SessionGoal({
+  seconds,
+  goalSeconds,
+}: {
+  seconds: number;
+  goalSeconds: number;
+}) {
+  const progress = Math.min(1, seconds / goalSeconds);
+  const complete = progress >= 1;
+
+  return (
+    <div className="omna-session-goal" aria-label="Цель сессии">
+      <div className="omna-session-goal-text">
+        {complete
+          ? "Три минуты удержаны. Можно остаться дольше."
+          : `Три минуты в Omna: ${formatSessionSeconds(seconds)} / ${formatSessionSeconds(goalSeconds)}`}
+      </div>
+      <div className="omna-session-goal-track">
+        <div
+          className="omna-session-goal-fill"
+          style={{ transform: `scaleX(${progress})` }}
+        />
+      </div>
+    </div>
   );
 }
