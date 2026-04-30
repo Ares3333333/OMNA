@@ -72,11 +72,11 @@ export function useAudioEngine(input: AudioInput) {
     const breathSwell = mode === "breath" ? 0.82 + breathValue * 0.26 : collectiveBreath;
     const voiceBloom = mode === "voice" ? micLevel * 0.095 : 0;
     const profileGain =
-      audioProfile === "choir" ? 1.34 : audioProfile === "deep" ? 1.12 : 1.2;
+      audioProfile === "choir" ? 1.08 : audioProfile === "deep" ? 1 : 0.96;
     const profilePitch =
-      audioProfile === "choir" ? 1.035 : audioProfile === "deep" ? 0.96 : 1;
+      audioProfile === "choir" ? 1 : audioProfile === "deep" ? 0.92 : 1;
     const modeBase =
-      mode === "voice" ? 0.086 : mode === "breath" ? 0.078 : mode === "listen" ? 0.068 : 0.024;
+      mode === "voice" ? 0.074 : mode === "breath" ? 0.067 : mode === "listen" ? 0.058 : 0.018;
     const targetGain =
       isJoined && !isMuted
         ? modeBase *
@@ -86,50 +86,50 @@ export function useAudioEngine(input: AudioInput) {
         : 0;
 
     master.gain.cancelScheduledValues(now);
-    master.gain.setTargetAtTime(clamp(targetGain, 0, 0.158), now, 0.8);
+    master.gain.setTargetAtTime(clamp(targetGain, 0, 0.13), now, 1.1);
     choirBus.gain.setTargetAtTime(
-      0.92 + force * 0.18 + ritualPresence * 0.24 + (mode === "voice" ? micLevel * 0.12 : 0),
+      0.82 + force * 0.12 + ritualPresence * 0.14 + (mode === "voice" ? micLevel * 0.08 : 0),
       now,
       1.4,
     );
     highpass.frequency.setTargetAtTime(
-      (audioProfile === "deep" ? 132 : mode === "listen" ? 152 : 146) + force * 8,
+      (audioProfile === "deep" ? 112 : mode === "listen" ? 128 : 122) + force * 5,
       now,
       1.5,
     );
     body.frequency.setTargetAtTime(
-      (audioProfile === "deep" ? 205 : 232) + Math.sin(now * 0.041) * 11,
+      (audioProfile === "deep" ? 174 : 196) + Math.sin(now * 0.035) * 4,
       now,
       1.8,
     );
     body.gain.setTargetAtTime(
-      (audioProfile === "deep" ? 2.15 : 1.85) + force * 0.34 + ritualPresence * 0.42,
+      (audioProfile === "deep" ? 1.6 : 1.35) + force * 0.22 + ritualPresence * 0.24,
       now,
       1.8,
     );
-    nasal.frequency.setTargetAtTime(435 + Math.sin(now * 0.033) * 26 + micLevel * 18, now, 1.6);
+    nasal.frequency.setTargetAtTime(286 + Math.sin(now * 0.021) * 8 + micLevel * 7, now, 1.8);
     nasal.gain.setTargetAtTime(
-      (mode === "voice" ? 6.25 + micLevel * 1.5 : 5.25 + force * 0.58) +
-        ritualPresence * 0.55,
+      (mode === "voice" ? 2.35 + micLevel * 0.7 : 1.85 + force * 0.22) +
+        ritualPresence * 0.18,
       now,
-      1.4,
+      1.8,
     );
-    mouth.frequency.setTargetAtTime(1120 + Math.sin(now * 0.026) * 78, now, 1.9);
-    mouth.gain.setTargetAtTime(mode === "listen" ? 1.42 : 1.95 + force * 0.34, now, 1.7);
+    mouth.frequency.setTargetAtTime(780 + Math.sin(now * 0.018) * 26, now, 2.1);
+    mouth.gain.setTargetAtTime(mode === "listen" ? 0.72 : 1.05 + force * 0.18, now, 1.9);
     filter.frequency.setTargetAtTime(
-      1780 + force * 280 + micLevel * 160 + (mode === "breath" ? breathValue * 120 : 0),
+      1180 + force * 160 + micLevel * 90 + (mode === "breath" ? breathValue * 70 : 0),
       now,
       1.6,
     );
-    filter.Q.setTargetAtTime(mode === "listen" ? 0.45 : 0.56, now, 1.4);
+    filter.Q.setTargetAtTime(mode === "listen" ? 0.42 : 0.48, now, 1.4);
 
-    const shimmer = Math.sin(now * 0.031) * 0.18 + Math.sin(now * 0.011) * 0.28;
+    const shimmer = Math.sin(now * 0.021) * 0.045 + Math.sin(now * 0.008) * 0.06;
     voices.forEach((voice, index) => {
       const humanBreath = 0.78 + Math.sin(now * voice.breathRate + voice.phase) * 0.18;
       const nearCrowd = 0.96 + Math.sin(now * (voice.drift * 0.43) + index * 1.7) * 0.035;
       const voicePresence = voice.ritualOnly ? ritualPresence : 1;
       const wave = Math.sin(now * voice.drift + voice.phase) * voice.detuneDepth;
-      const voiceLift = mode === "voice" ? micLevel * voice.detuneDepth * 0.16 : 0;
+      const voiceLift = mode === "voice" ? micLevel * voice.detuneDepth * 0.045 : 0;
       voice.oscillator.frequency.setTargetAtTime(
         voice.baseFrequency * profilePitch + wave + shimmer + voiceLift,
         now,
@@ -179,30 +179,30 @@ export function useAudioEngine(input: AudioInput) {
     const compressor = context.createDynamicsCompressor();
 
     master.gain.value = 0;
-    choirBus.gain.value = 0.92;
+    choirBus.gain.value = 0.82;
     highpass.type = "highpass";
-    highpass.frequency.value = 146;
+    highpass.frequency.value = 122;
     highpass.Q.value = 0.48;
     body.type = "peaking";
-    body.frequency.value = 232;
-    body.Q.value = 0.78;
-    body.gain.value = 1.85;
+    body.frequency.value = 196;
+    body.Q.value = 0.62;
+    body.gain.value = 1.35;
     nasal.type = "peaking";
-    nasal.frequency.value = 435;
-    nasal.Q.value = 1.35;
-    nasal.gain.value = 5.25;
+    nasal.frequency.value = 286;
+    nasal.Q.value = 0.82;
+    nasal.gain.value = 1.85;
     mouth.type = "peaking";
-    mouth.frequency.value = 1120;
-    mouth.Q.value = 0.75;
-    mouth.gain.value = 1.95;
+    mouth.frequency.value = 780;
+    mouth.Q.value = 0.58;
+    mouth.gain.value = 1.05;
     filter.type = "lowpass";
-    filter.frequency.value = 1780;
-    filter.Q.value = 0.55;
-    compressor.threshold.value = -20;
-    compressor.knee.value = 28;
-    compressor.ratio.value = 2.2;
-    compressor.attack.value = 0.08;
-    compressor.release.value = 0.82;
+    filter.frequency.value = 1180;
+    filter.Q.value = 0.46;
+    compressor.threshold.value = -22;
+    compressor.knee.value = 34;
+    compressor.ratio.value = 1.9;
+    compressor.attack.value = 0.14;
+    compressor.release.value = 1.25;
 
     choirBus.connect(highpass);
     highpass.connect(body);
@@ -213,48 +213,22 @@ export function useAudioEngine(input: AudioInput) {
     compressor.connect(master);
     master.connect(context.destination);
 
-    const choirRoots = [
-      174.6,
-      185,
-      196,
-      207.7,
-      220,
-      233.1,
-      246.9,
-      261.6,
-      277.2,
-      293.7,
+    const voiceSpec = [
+      { baseFrequency: 195.7, weight: 0.052, drift: 0.009, detuneDepth: 0.055, ritualOnly: false, type: "sine" as OscillatorType },
+      { baseFrequency: 196, weight: 0.058, drift: 0.008, detuneDepth: 0.045, ritualOnly: false, type: "sine" as OscillatorType },
+      { baseFrequency: 196.35, weight: 0.046, drift: 0.01, detuneDepth: 0.05, ritualOnly: false, type: "sine" as OscillatorType },
+      { baseFrequency: 293.66, weight: 0.026, drift: 0.007, detuneDepth: 0.038, ritualOnly: false, type: "sine" as OscillatorType },
+      { baseFrequency: 294.08, weight: 0.018, drift: 0.006, detuneDepth: 0.034, ritualOnly: false, type: "sine" as OscillatorType },
+      { baseFrequency: 392, weight: 0.02, drift: 0.005, detuneDepth: 0.026, ritualOnly: false, type: "sine" as OscillatorType },
+      { baseFrequency: 393.1, weight: 0.012, drift: 0.004, detuneDepth: 0.022, ritualOnly: false, type: "triangle" as OscillatorType },
+      { baseFrequency: 247, weight: 0.012, drift: 0.006, detuneDepth: 0.026, ritualOnly: false, type: "sine" as OscillatorType },
+      { baseFrequency: 784, weight: 0.005, drift: 0.003, detuneDepth: 0.018, ritualOnly: false, type: "sine" as OscillatorType },
     ];
-    const voiceSpec = choirRoots.flatMap((root, rootIndex) => {
-      const octaveWeight = rootIndex < 3 ? 0.036 : rootIndex < 7 ? 0.032 : 0.026;
-
-      return [
-        {
-          baseFrequency: root,
-          weight: octaveWeight,
-          drift: 0.014 + rootIndex * 0.0017,
-          detuneDepth: 0.18 + rootIndex * 0.012,
-          ritualOnly: false,
-          type: "sine" as OscillatorType,
-        },
-        {
-          baseFrequency: root * 2.01,
-          weight: octaveWeight * 0.48,
-          drift: 0.011 + rootIndex * 0.0013,
-          detuneDepth: 0.12 + rootIndex * 0.007,
-          ritualOnly: false,
-          type: rootIndex % 3 === 0 ? ("triangle" as OscillatorType) : ("sine" as OscillatorType),
-        },
-      ];
-    });
-    const ritualVoiceSpec = [164.8, 196, 220, 246.9, 293.7, 329.6, 392].map((root, index) => ({
-      baseFrequency: root,
-      weight: index < 3 ? 0.018 : 0.011,
-      drift: 0.008 + index * 0.001,
-      detuneDepth: 0.09 + index * 0.006,
-      ritualOnly: true,
-      type: "sine" as OscillatorType,
-    }));
+    const ritualVoiceSpec = [
+      { baseFrequency: 196, weight: 0.014, drift: 0.005, detuneDepth: 0.026, ritualOnly: true, type: "sine" as OscillatorType },
+      { baseFrequency: 293.66, weight: 0.011, drift: 0.004, detuneDepth: 0.022, ritualOnly: true, type: "sine" as OscillatorType },
+      { baseFrequency: 392, weight: 0.009, drift: 0.003, detuneDepth: 0.018, ritualOnly: true, type: "sine" as OscillatorType },
+    ];
     const allVoiceSpec = [...voiceSpec, ...ritualVoiceSpec];
 
     const voices = allVoiceSpec.map((voice, index) => {
