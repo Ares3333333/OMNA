@@ -2,11 +2,16 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { Volume2, VolumeX } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AudioProfileSelector } from "@/components/AudioProfileSelector";
 import { BreathGuide } from "@/components/BreathGuide";
+import { IntroRitualCue } from "@/components/IntroRitualCue";
 import { LivingSphere } from "@/components/LivingSphere";
 import { ModeSelector } from "@/components/ModeSelector";
+import { PrivateCircle } from "@/components/PrivateCircle";
+import { ProductPath } from "@/components/ProductPath";
+import { ReminderControl } from "@/components/ReminderControl";
+import { RitualMemory } from "@/components/RitualMemory";
 import { SessionControls } from "@/components/SessionControls";
 import { SessionSummary } from "@/components/SessionSummary";
 import { StatsPanel } from "@/components/StatsPanel";
@@ -23,7 +28,13 @@ import {
   formatSessionDurationWords,
 } from "@/lib/format";
 import { createSessionRitualTrace, SessionRitualTrace } from "@/lib/sessionRitual";
+import {
+  readOmnaSessions,
+  saveOmnaSession,
+  StoredSession,
+} from "@/lib/sessionHistory";
 import { createSessionShareImage } from "@/lib/shareCard";
+import { createSessionShareVideo } from "@/lib/shareVideo";
 import { AudioProfile, OmnaMode } from "@/lib/types";
 
 const initialLifeSeconds = 18 * 60 * 60 + 24 * 60;
@@ -45,8 +56,13 @@ export function MainPage() {
   const [shareFeedback, setShareFeedback] = useState("");
   const [supportFeedback, setSupportFeedback] = useState("");
   const [installFeedback, setInstallFeedback] = useState("");
+  const [circleFeedback, setCircleFeedback] = useState("");
+  const [reminderFeedback, setReminderFeedback] = useState("");
+  const [sessionHistory, setSessionHistory] = useState<StoredSession[]>([]);
+  const [circleId, setCircleId] = useState<string | null>(null);
   const [audioProfile, setAudioProfile] = useState<AudioProfile>("choir");
   const [sphereEventSeed, setSphereEventSeed] = useState(0);
+  const reminderTimeoutRef = useRef<number | null>(null);
   const eveningRitual = useEveningRitual();
   const pwaInstall = usePwaInstallPrompt();
 
@@ -74,6 +90,22 @@ export function MainPage() {
 
   useEffect(() => {
     trackOmnaEvent("view");
+
+    const boot = window.setTimeout(() => {
+      setSessionHistory(readOmnaSessions());
+      const params = new URLSearchParams(window.location.search);
+      setCircleId(params.get("circle"));
+    }, 0);
+
+    return () => window.clearTimeout(boot);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (reminderTimeoutRef.current) {
+        window.clearTimeout(reminderTimeoutRef.current);
+      }
+    };
   }, []);
 
   useEffect(() => {
@@ -140,8 +172,10 @@ export function MainPage() {
     setShareFeedback("");
     setSupportFeedback("");
     setInstallFeedback("");
+    setCircleFeedback("");
+    setReminderFeedback("");
     setSphereEventSeed((seed) => seed + 1);
-    trackOmnaEvent("join");
+    trackOmnaEvent("join", { circle: circleId });
     void audioEngine.start();
   };
 
@@ -166,6 +200,13 @@ export function MainPage() {
       mode,
       globalForce,
     });
+    const savedSessions = saveOmnaSession({
+      seconds: personalSeconds,
+      mode,
+      users: Math.round(globalUsers),
+      force: Math.round(globalForce),
+      trace,
+    });
 
     setLastSession({
       seconds: personalSeconds,
@@ -178,6 +219,7 @@ export function MainPage() {
     setShareFeedback("");
     setSupportFeedback("");
     setInstallFeedback("");
+    setSessionHistory(savedSessions);
     setSphereEventSeed((seed) => seed + 1);
     trackOmnaEvent("session_end", {
       seconds: personalSeconds,
@@ -204,6 +246,24 @@ export function MainPage() {
 
     try {
       if (lastSession) {
+        const video = await createSessionShareVideo({
+          seconds: lastSession.seconds,
+          users: lastSession.users,
+          trace: lastSession.trace,
+        });
+
+        if (video && navigator.canShare?.({ files: [video] })) {
+          await navigator.share({
+            title: "Omna",
+            text,
+            url,
+            files: [video],
+          });
+          setShareFeedback("Видео сессии открыто для шаринга.");
+          trackOmnaEvent("share_video", { seconds: lastSession.seconds });
+          return;
+        }
+
         const image = await createSessionShareImage({
           seconds: lastSession.seconds,
           users: lastSession.users,
@@ -247,6 +307,59 @@ export function MainPage() {
     setSupportFeedback(
       "Платежи пока не подключены. Сейчас лучшая поддержка — позвать одного человека или вернуться на вечерний Ом.",
     );
+  };
+
+  const createCircle = async () => {
+    const nextCircle = Math.random().toString(36).slice(2, 8);
+    setCircleId(nextCircle);
+    const url = createCircleUrl(nextCircle);
+    window.history.replaceState(null, "", url);
+    await navigator.clipboard?.writeText(url).catch(() => undefined);
+    setCircleFeedback("Ссылка круга скопирована.");
+    trackOmnaEvent("circle_create");
+  };
+
+  const copyCircle = async () => {
+    if (!circleId) {
+      return;
+    }
+
+    await navigator.clipboard?.writeText(createCircleUrl(circleId)).catch(() => undefined);
+    setCircleFeedback("Ссылка круга скопирована.");
+    trackOmnaEvent("circle_copy");
+  };
+
+  const enableReminder = async () => {
+    if (!("Notification" in window)) {
+      setReminderFeedback("Браузер не поддерживает уведомления.");
+      return;
+    }
+
+    const permission =
+      Notification.permission === "default"
+        ? await Notification.requestPermission()
+        : Notification.permission;
+
+    if (permission !== "granted") {
+      setReminderFeedback("Уведомления не включены.");
+      trackOmnaEvent("reminder_permission", { granted: false });
+      return;
+    }
+
+    if (reminderTimeoutRef.current) {
+      window.clearTimeout(reminderTimeoutRef.current);
+    }
+
+    const delay = getNextEveningReminderDelay();
+    reminderTimeoutRef.current = window.setTimeout(() => {
+      new Notification("Omna", {
+        body: "Через 10 минут общий вечерний Ом.",
+        icon: "/icon.svg",
+      });
+    }, delay);
+
+    setReminderFeedback("Напоминание на сегодня включено.");
+    trackOmnaEvent("reminder_permission", { granted: true });
   };
 
   const install = async () => {
@@ -358,21 +471,26 @@ export function MainPage() {
 
           <div className="mmatrix-actions">
             {lastSession && !isJoined ? (
-              <SessionSummary
-                seconds={lastSession.seconds}
-                globalUsers={lastSession.users}
-                trace={lastSession.trace}
-                shareFeedback={shareFeedback}
-                supportFeedback={supportFeedback}
-                installFeedback={installFeedback}
-                canInstall={pwaInstall.canInstall}
-                onReturn={join}
-                onInvite={invite}
-                onSupport={support}
-                onInstall={install}
-              />
+              <>
+                <SessionSummary
+                  seconds={lastSession.seconds}
+                  globalUsers={lastSession.users}
+                  trace={lastSession.trace}
+                  shareFeedback={shareFeedback}
+                  supportFeedback={supportFeedback}
+                  installFeedback={installFeedback}
+                  canInstall={pwaInstall.canInstall}
+                  onReturn={join}
+                  onInvite={invite}
+                  onSupport={support}
+                  onInstall={install}
+                />
+                <ProductPath onSupport={support} />
+              </>
             ) : (
               <>
+                {!isJoined ? <IntroRitualCue /> : null}
+
                 <SessionControls
                   isJoined={isJoined}
                   onJoin={join}
@@ -407,6 +525,22 @@ export function MainPage() {
                 {isJoined ? (
                   <SessionGoal seconds={personalSeconds} goalSeconds={sessionGoalSeconds} />
                 ) : null}
+
+                {!isJoined ? (
+                  <>
+                    <PrivateCircle
+                      circleId={circleId}
+                      feedback={circleFeedback}
+                      onCreate={createCircle}
+                      onCopy={copyCircle}
+                    />
+                    <ReminderControl
+                      feedback={reminderFeedback}
+                      onEnable={enableReminder}
+                    />
+                    <RitualMemory sessions={sessionHistory} />
+                  </>
+                ) : null}
               </>
             )}
 
@@ -433,6 +567,24 @@ export function MainPage() {
       </div>
     </main>
   );
+}
+
+function createCircleUrl(circle: string) {
+  const url = new URL(window.location.href);
+  url.searchParams.set("circle", circle);
+  return url.toString();
+}
+
+function getNextEveningReminderDelay() {
+  const now = new Date();
+  const next = new Date(now);
+  next.setHours(21, 50, 0, 0);
+
+  if (next <= now) {
+    next.setDate(next.getDate() + 1);
+  }
+
+  return Math.max(1000, next.getTime() - now.getTime());
 }
 
 function SessionGoal({

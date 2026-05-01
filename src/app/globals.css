@@ -390,6 +390,152 @@ button {
   box-shadow: inset 0 0 16px rgba(113, 217, 255, 0.08);
 }
 
+.omna-intro-cue,
+.omna-circle,
+.omna-reminder,
+.omna-memory,
+.omna-product-path {
+  width: min(100%, 22rem);
+  border-radius: 1rem;
+  border: 1px solid rgba(125, 201, 255, 0.1);
+  background: rgba(4, 17, 35, 0.24);
+  color: rgba(211, 234, 255, 0.52);
+  backdrop-filter: blur(16px);
+  box-shadow: inset 0 0 24px rgba(73, 170, 255, 0.032);
+}
+
+.omna-intro-cue {
+  display: flex;
+  justify-content: center;
+  gap: 0.55rem;
+  margin-bottom: clamp(0.45rem, 1svh, 0.7rem);
+  padding: 0.42rem 0.72rem;
+  font-size: clamp(0.62rem, min(0.86vw, 1.45svh), 0.76rem);
+  line-height: 1.2;
+}
+
+.omna-intro-cue span + span::before {
+  content: "·";
+  margin-right: 0.55rem;
+  color: rgba(91, 176, 255, 0.48);
+}
+
+.omna-circle,
+.omna-reminder {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.52rem;
+  margin-top: clamp(0.48rem, 1svh, 0.72rem);
+  padding: 0.54rem 0.64rem;
+  text-align: left;
+}
+
+.omna-circle span,
+.omna-reminder span,
+.omna-product-path > span {
+  display: block;
+  color: rgba(201, 226, 250, 0.42);
+  font-size: clamp(0.56rem, min(0.78vw, 1.32svh), 0.68rem);
+  line-height: 1.15;
+}
+
+.omna-circle strong {
+  display: block;
+  margin-top: 0.1rem;
+  color: rgba(232, 246, 255, 0.84);
+  font-size: clamp(0.72rem, min(0.96vw, 1.55svh), 0.86rem);
+  font-weight: 500;
+}
+
+.omna-circle button,
+.omna-reminder button,
+.omna-product-path button {
+  min-height: 1.82rem;
+  border-radius: 999px;
+  border: 1px solid rgba(143, 213, 255, 0.16);
+  background: rgba(125, 221, 255, 0.08);
+  padding: 0 0.62rem;
+  color: rgba(231, 247, 255, 0.72);
+  font-size: clamp(0.6rem, min(0.82vw, 1.35svh), 0.72rem);
+  line-height: 1;
+  transition:
+    border-color 180ms ease,
+    color 180ms ease,
+    background 180ms ease;
+}
+
+.omna-circle button:hover,
+.omna-reminder button:hover,
+.omna-product-path button:hover {
+  border-color: rgba(180, 232, 255, 0.34);
+  color: rgba(250, 254, 255, 0.92);
+}
+
+.omna-circle small,
+.omna-reminder small,
+.omna-product-path small {
+  grid-column: 1 / -1;
+  color: rgba(174, 213, 241, 0.44);
+  font-size: clamp(0.54rem, min(0.72vw, 1.2svh), 0.64rem);
+  line-height: 1.2;
+}
+
+.omna-memory {
+  margin-top: clamp(0.48rem, 1svh, 0.72rem);
+  padding: 0.58rem 0.7rem;
+}
+
+.omna-memory-empty {
+  padding: 0.48rem 0.7rem;
+  text-align: center;
+  font-size: clamp(0.58rem, min(0.78vw, 1.3svh), 0.68rem);
+}
+
+.omna-memory-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.35rem;
+  text-align: center;
+}
+
+.omna-memory-grid strong {
+  display: block;
+  color: rgba(239, 250, 255, 0.9);
+  font-size: clamp(0.8rem, min(1.12vw, 1.8svh), 1rem);
+  font-weight: 400;
+  line-height: 1;
+}
+
+.omna-memory-grid span {
+  display: block;
+  margin-top: 0.2rem;
+  color: rgba(190, 218, 244, 0.44);
+  font-size: clamp(0.5rem, min(0.7vw, 1.15svh), 0.62rem);
+  line-height: 1.1;
+}
+
+.omna-memory p {
+  margin: 0.45rem 0 0;
+  color: rgba(207, 233, 255, 0.46);
+  font-size: clamp(0.56rem, min(0.78vw, 1.3svh), 0.68rem);
+  line-height: 1.2;
+  text-align: center;
+}
+
+.omna-product-path {
+  margin-top: clamp(0.45rem, 1svh, 0.7rem);
+  padding: 0.58rem 0.7rem;
+  text-align: center;
+}
+
+.omna-product-path > div {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.35rem;
+  margin-top: 0.42rem;
+}
+
 .omna-session-goal {
   width: min(100%, 22rem);
   margin-top: clamp(0.42rem, 1svh, 0.72rem);
@@ -681,6 +827,40 @@ button {
 
   .omna-audio-profile button {
     min-height: 1.42rem;
+  }
+
+  .omna-intro-cue,
+  .omna-circle,
+  .omna-reminder,
+  .omna-memory,
+  .omna-product-path {
+    width: min(100%, 18.5rem);
+  }
+
+  .omna-intro-cue {
+    gap: 0.35rem;
+    padding: 0.36rem 0.5rem;
+    font-size: 0.58rem;
+  }
+
+  .omna-intro-cue span + span::before {
+    margin-right: 0.35rem;
+  }
+
+  .omna-circle,
+  .omna-reminder,
+  .omna-memory,
+  .omna-product-path {
+    margin-top: 0.42rem;
+    padding: 0.46rem 0.52rem;
+  }
+
+  .omna-circle button,
+  .omna-reminder button,
+  .omna-product-path button {
+    min-height: 1.62rem;
+    padding-inline: 0.48rem;
+    font-size: 0.58rem;
   }
 
   .omna-session-goal {
