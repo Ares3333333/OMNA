@@ -5,7 +5,6 @@ import { Volume2, VolumeX } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AudioProfileSelector } from "@/components/AudioProfileSelector";
 import { BreathGuide } from "@/components/BreathGuide";
-import { IntroRitualCue } from "@/components/IntroRitualCue";
 import { LivingSphere } from "@/components/LivingSphere";
 import { ModeSelector } from "@/components/ModeSelector";
 import { PrivateCircle } from "@/components/PrivateCircle";
@@ -141,7 +140,7 @@ export function MainPage() {
     }
 
     if (!isJoined) {
-      return "Сейчас звук держат другие. Ты можешь войти.";
+      return "Звук держат другие. Войди.";
     }
 
     if (mode === "voice") {
@@ -373,14 +372,14 @@ export function MainPage() {
   const introTitle = lastSession
     ? "Спасибо за звучание."
     : isJoined
-      ? "Живой звук, который держат люди"
-      : "Omna — это живой звук, который держат люди.";
+      ? "Выбери участие"
+      : "Живой общий звук";
 
   const introText = lastSession
-    ? "Ты можешь вернуться в поле или позвать того, кто сейчас нужен этому звуку."
+    ? "Вернись в поле или позови того, кому нужен этот звук."
     : isJoined
-      ? "Выбери способ участия: звучать, дышать или слушать."
-      : "Ты можешь звучать, дышать или просто присутствовать. Пока люди подключаются — Omna живёт.";
+      ? "Голос, дыхание или присутствие."
+      : "Войди голосом, дыханием или присутствием.";
 
   const statsPersonalSeconds = isJoined
     ? personalSeconds
@@ -489,13 +488,13 @@ export function MainPage() {
               </>
             ) : (
               <>
-                {!isJoined ? <IntroRitualCue /> : null}
-
-                <SessionControls
-                  isJoined={isJoined}
-                  onJoin={join}
-                  onDisconnect={disconnect}
-                />
+                {!isJoined ? (
+                  <SessionControls
+                    isJoined={isJoined}
+                    onJoin={join}
+                    onDisconnect={disconnect}
+                  />
+                ) : null}
 
                 <AnimatePresence mode="popLayout">
                   {isJoined ? (
@@ -516,6 +515,14 @@ export function MainPage() {
                   />
                 ) : null}
 
+                {isJoined ? (
+                  <SessionControls
+                    isJoined={isJoined}
+                    onJoin={join}
+                    onDisconnect={disconnect}
+                  />
+                ) : null}
+
                 <AnimatePresence>
                   {isJoined && mode === "breath" ? (
                     <BreathGuide key="breath" breath={breath} />
@@ -527,7 +534,7 @@ export function MainPage() {
                 ) : null}
 
                 {!isJoined ? (
-                  <>
+                  <div className="omna-quiet-tools" aria-label="РўРёС…РёРµ РґРµР№СЃС‚РІРёСЏ Omna">
                     <PrivateCircle
                       circleId={circleId}
                       feedback={circleFeedback}
@@ -539,7 +546,7 @@ export function MainPage() {
                       onEnable={enableReminder}
                     />
                     <RitualMemory sessions={sessionHistory} />
-                  </>
+                  </div>
                 ) : null}
               </>
             )}

@@ -90,20 +90,20 @@ button {
   min-height: 0;
   flex-direction: column;
   align-items: center;
-  padding: clamp(4.2rem, 7.8svh, 5.9rem) clamp(1.1rem, 4.8vw, 5.25rem)
-    clamp(0.8rem, 2.2svh, 1.55rem);
+  padding: clamp(3.9rem, 6.8svh, 5.1rem) clamp(1.1rem, 4.8vw, 5.25rem)
+    clamp(0.72rem, 1.7svh, 1.25rem);
 }
 
 .mmatrix-stage::before {
   content: "";
   position: absolute;
   z-index: 0;
-  top: clamp(4.8rem, 9.5svh, 7.4rem);
+  top: 50%;
   left: 50%;
-  width: min(142vw, 92rem);
-  height: min(76svh, 48rem);
+  width: min(164vw, 118rem);
+  height: min(92svh, 62rem);
   pointer-events: none;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
   background:
     radial-gradient(ellipse at 50% 25%, rgba(54, 166, 255, 0.22), transparent 33%),
     radial-gradient(ellipse at 50% 54%, rgba(18, 91, 196, 0.14), transparent 57%),
@@ -128,17 +128,20 @@ button {
 }
 
 .mmatrix-sphere-slot {
-  flex: 0 1 clamp(20rem, 50svh, 39rem);
-  width: min(128vw, 96rem);
+  position: relative;
+  z-index: 1;
+  flex: 0 1 clamp(26rem, 61svh, 47rem);
+  width: min(146vw, 112rem);
   min-height: 0;
   overflow: visible;
+  pointer-events: none;
 }
 
 .mmatrix-sphere {
   position: relative;
   left: 50%;
   height: 100%;
-  width: min(152vw, 96rem);
+  width: min(182vw, 116rem);
   margin: 0 auto;
   transform: translateX(-50%);
   -webkit-mask-image: radial-gradient(
@@ -164,16 +167,20 @@ button {
 }
 
 .mmatrix-status {
-  margin-top: clamp(-0.16rem, -0.32svh, 0.16rem);
+  margin-top: clamp(-1.15rem, -1.85svh, -0.48rem);
   width: fit-content;
   max-width: min(100%, 42rem);
   border-radius: 999px;
-  border: 1px solid rgba(118, 190, 255, 0.1);
-  background: rgba(3, 14, 30, 0.18);
-  padding: clamp(0.26rem, 0.62svh, 0.45rem) clamp(0.62rem, 1.35vw, 0.95rem);
+  border: 1px solid rgba(121, 212, 255, 0.11);
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(70, 176, 255, 0.12), transparent 62%),
+    rgba(2, 13, 29, 0.18);
+  padding: clamp(0.24rem, 0.52svh, 0.38rem) clamp(0.72rem, 1.45vw, 1.04rem);
   line-height: 1.25;
   backdrop-filter: blur(18px);
-  box-shadow: inset 0 0 24px rgba(73, 170, 255, 0.035);
+  box-shadow:
+    inset 0 0 24px rgba(73, 170, 255, 0.035),
+    0 0 26px rgba(22, 112, 255, 0.055);
 }
 
 .mmatrix-status span:last-child {
@@ -181,66 +188,72 @@ button {
 }
 
 .mmatrix-life-line {
-  margin-top: clamp(0.28rem, 0.75svh, 0.62rem);
+  margin-top: clamp(0.1rem, 0.28svh, 0.22rem);
   border-radius: 999px;
-  border: 1px solid rgba(125, 190, 255, 0.12);
-  background: rgba(4, 15, 31, 0.26);
-  padding: clamp(0.24rem, 0.55svh, 0.42rem) clamp(0.65rem, 1.4vw, 1rem);
-  color: rgba(214, 235, 255, 0.5);
-  font-size: clamp(0.68rem, min(0.9vw, 1.55svh), 0.88rem);
+  border: 0;
+  background: transparent;
+  padding: clamp(0.18rem, 0.42svh, 0.32rem) clamp(0.56rem, 1.15vw, 0.82rem);
+  color: rgba(214, 235, 255, 0.28);
+  font-size: clamp(0.56rem, min(0.72vw, 1.18svh), 0.68rem);
   line-height: 1.1;
   text-align: center;
   backdrop-filter: blur(16px);
 }
 
 .mmatrix-copy {
-  width: min(100%, 82rem);
-  margin-top: clamp(0.58rem, 1.45svh, 1.25rem);
+  width: min(100%, 58rem);
+  margin-top: clamp(0.22rem, 0.58svh, 0.48rem);
   text-align: center;
 }
 
 .mmatrix-title {
-  font-size: clamp(2.05rem, min(4.55vw, 5.85svh), 4.85rem);
-  line-height: 1.01;
+  font-family: var(--font-display);
+  font-size: clamp(1.32rem, min(2.35vw, 3.2svh), 2.5rem);
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.04;
+  opacity: 0.76;
+  text-transform: none;
 }
 
 .mmatrix-subtitle {
-  margin-top: clamp(0.38rem, 1.05svh, 0.82rem);
-  font-size: clamp(0.92rem, min(1.22vw, 2.05svh), 1.32rem);
+  margin-top: clamp(0.18rem, 0.44svh, 0.34rem);
+  font-size: clamp(0.68rem, min(0.86vw, 1.38svh), 0.86rem);
   line-height: 1.35;
+  opacity: 0.58;
 }
 
 .mmatrix-actions {
   display: flex;
-  width: min(100%, 36rem);
+  width: min(100%, 46rem);
   flex: 0 0 auto;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-top: clamp(0.72rem, 1.65svh, 1.22rem);
+  margin-top: clamp(0.32rem, 0.78svh, 0.62rem);
 }
 
 .mmatrix-stats-slot {
-  flex: 0 1 clamp(5.55rem, 12.5svh, 7.8rem);
-  width: min(100%, 64rem);
+  flex: 0 1 clamp(4.85rem, 10.4svh, 6.75rem);
+  width: min(100%, 56rem);
   min-height: 0;
   margin-top: auto;
 }
 
 .mmatrix-stage[data-joined="true"] .mmatrix-sphere-slot {
-  flex-basis: clamp(14.4rem, 36svh, 24rem);
+  flex-basis: clamp(24rem, 54svh, 40rem);
 }
 
 .mmatrix-stage[data-joined="true"] .mmatrix-copy {
-  margin-top: clamp(0.55rem, 1.5vh, 1.1rem);
+  margin-top: clamp(0.18rem, 0.45vh, 0.42rem);
 }
 
 .mmatrix-stage[data-joined="true"] .mmatrix-title {
-  font-size: clamp(1.9rem, min(4.5vw, 5.7vh), 3.75rem);
+  font-size: clamp(1.18rem, min(2.05vw, 2.9vh), 2.1rem);
 }
 
 .mmatrix-stage[data-joined="true"] .mmatrix-actions {
-  margin-top: clamp(0.45rem, 1.3vh, 0.9rem);
+  margin-top: clamp(0.1rem, 0.28vh, 0.28rem);
 }
 
 .mmatrix-stage[data-session="summary"] .mmatrix-title {
@@ -276,26 +289,29 @@ button {
 }
 
 .omna-privacy-note {
-  width: 100%;
+  width: min(100%, 31rem);
   border-radius: 999px;
-  border: 1px solid rgba(135, 205, 255, 0.1);
-  background: rgba(4, 17, 35, 0.3);
-  padding: 0.44rem 0.72rem;
-  color: rgba(215, 237, 255, 0.54);
-  font-size: clamp(0.62rem, min(0.86vw, 1.45svh), 0.76rem);
+  border: 1px solid rgba(135, 205, 255, 0.08);
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(75, 177, 255, 0.08), transparent 64%),
+    rgba(4, 17, 35, 0.16);
+  padding: 0.32rem 0.62rem;
+  color: rgba(215, 237, 255, 0.44);
+  font-size: clamp(0.56rem, min(0.72vw, 1.2svh), 0.66rem);
   line-height: 1.25;
   text-align: center;
-  backdrop-filter: blur(16px);
+  backdrop-filter: blur(14px);
 }
 
 .omna-voice-calibration {
-  width: 100%;
-  border-radius: 0.95rem;
-  border: 1px solid rgba(135, 205, 255, 0.12);
-  background: rgba(4, 17, 35, 0.34);
-  padding: 0.52rem 0.66rem;
-  color: rgba(216, 238, 255, 0.62);
-  backdrop-filter: blur(16px);
+  width: min(100%, 29rem);
+  margin-top: clamp(-0.35rem, -0.7svh, -0.08rem);
+  border-radius: 999px;
+  border: 1px solid rgba(135, 205, 255, 0.09);
+  background: rgba(4, 17, 35, 0.16);
+  padding: 0.38rem 0.56rem;
+  color: rgba(216, 238, 255, 0.52);
+  backdrop-filter: blur(14px);
 }
 
 .omna-voice-calibration-row {
@@ -342,11 +358,11 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.55rem;
-  width: min(100%, 22rem);
-  margin-top: clamp(0.38rem, 0.9svh, 0.62rem);
-  color: rgba(211, 234, 255, 0.48);
-  font-size: clamp(0.62rem, min(0.82vw, 1.4svh), 0.76rem);
+  gap: 0.42rem;
+  width: min(100%, 21rem);
+  margin-top: clamp(0.18rem, 0.46svh, 0.32rem);
+  color: rgba(211, 234, 255, 0.42);
+  font-size: clamp(0.58rem, min(0.72vw, 1.16svh), 0.66rem);
   line-height: 1;
 }
 
@@ -357,23 +373,25 @@ button {
 .omna-audio-profile > div {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.25rem;
-  width: min(15.5rem, 100%);
+  gap: 0.38rem;
+  width: min(16rem, 100%);
   border-radius: 999px;
-  border: 1px solid rgba(125, 201, 255, 0.1);
-  background: rgba(4, 17, 35, 0.26);
-  padding: 0.2rem;
-  backdrop-filter: blur(16px);
+  border: 0;
+  background: transparent;
+  padding: 0;
 }
 
 .omna-audio-profile button {
-  min-height: 1.55rem;
-  border: 0;
+  min-height: 1.58rem;
+  border: 1px solid rgba(125, 201, 255, 0.14);
   border-radius: 999px;
-  background: transparent;
-  color: rgba(221, 240, 255, 0.52);
+  background:
+    radial-gradient(circle at 50% 28%, rgba(106, 220, 255, 0.16), transparent 42%),
+    rgba(4, 17, 35, 0.14);
+  color: rgba(221, 240, 255, 0.58);
   font-size: inherit;
   line-height: 1;
+  box-shadow: inset 0 0 16px rgba(73, 170, 255, 0.025);
   transition:
     background 180ms ease,
     color 180ms ease,
@@ -385,9 +403,222 @@ button {
 }
 
 .omna-audio-profile-active {
-  background: rgba(128, 221, 255, 0.16) !important;
+  background:
+    radial-gradient(circle at 50% 28%, rgba(120, 232, 255, 0.28), transparent 45%),
+    rgba(30, 117, 230, 0.18) !important;
   color: rgba(245, 252, 255, 0.92) !important;
-  box-shadow: inset 0 0 16px rgba(113, 217, 255, 0.08);
+  box-shadow:
+    inset 0 0 18px rgba(113, 217, 255, 0.1),
+    0 0 18px rgba(58, 179, 255, 0.08);
+}
+
+.omna-primary-orb,
+.omna-disconnect-orb,
+.omna-mode-orb,
+.omna-circle button,
+.omna-reminder button,
+.omna-product-path button {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid rgba(133, 213, 255, 0.18);
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(113, 222, 255, 0.16), transparent 58%),
+    linear-gradient(90deg, rgba(35, 113, 255, 0.02), rgba(80, 194, 255, 0.12), rgba(35, 113, 255, 0.02)),
+    rgba(1, 11, 25, 0.18);
+  color: rgba(232, 248, 255, 0.78);
+  box-shadow:
+    inset 0 0 26px rgba(98, 214, 255, 0.06),
+    inset 0 -10px 22px rgba(2, 19, 59, 0.3),
+    0 0 28px rgba(40, 151, 255, 0.08);
+  backdrop-filter: blur(18px);
+  transition:
+    border-color 180ms ease,
+    color 180ms ease,
+    filter 180ms ease,
+    transform 180ms ease;
+}
+
+.omna-primary-orb::before,
+.omna-disconnect-orb::before,
+.omna-mode-orb::before,
+.omna-circle button::before,
+.omna-reminder button::before,
+.omna-product-path button::before {
+  content: "";
+  position: absolute;
+  inset: 12% 10%;
+  height: 1px;
+  z-index: -1;
+  border-radius: inherit;
+  background:
+    linear-gradient(90deg, transparent, rgba(121, 230, 255, 0.68), transparent),
+    radial-gradient(ellipse at 50% 50%, rgba(75, 168, 255, 0.14), transparent 64%);
+  filter: blur(2px);
+  opacity: 0.48;
+  animation: omna-light-stroke 5.8s ease-in-out infinite;
+}
+
+.omna-primary-orb:hover,
+.omna-disconnect-orb:hover,
+.omna-mode-orb:hover,
+.omna-circle button:hover,
+.omna-reminder button:hover,
+.omna-product-path button:hover {
+  border-color: rgba(190, 237, 255, 0.34);
+  color: rgba(255, 255, 255, 0.96);
+  filter: saturate(1.04);
+}
+
+.omna-primary-orb {
+  display: grid;
+  place-items: center;
+  width: min(100%, clamp(13rem, 23vw, 20rem));
+  height: clamp(2.78rem, 5.35svh, 3.58rem);
+  border-radius: 999px;
+  padding: 0 2rem;
+  text-align: center;
+  font-size: clamp(0.86rem, min(1vw, 1.65svh), 1rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0;
+  animation: omna-control-breathe 7.5s ease-in-out infinite;
+}
+
+.omna-orb-core,
+.omna-orb-ring,
+.omna-orb-wave {
+  pointer-events: none;
+  position: absolute;
+}
+
+.omna-orb-core {
+  inset: 0;
+  border-radius: 999px;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(107, 217, 255, 0.3), transparent 56%),
+    radial-gradient(ellipse at 50% 120%, rgba(31, 103, 255, 0.22), transparent 64%);
+  filter: blur(0);
+  opacity: 0.42;
+}
+
+.omna-orb-ring {
+  inset: 1px;
+  border-radius: 999px;
+  border: 1px solid rgba(136, 224, 255, 0.06);
+  box-shadow: inset 0 0 18px rgba(96, 201, 255, 0.04);
+}
+
+.omna-orb-wave {
+  inset-inline: 8%;
+  top: 50%;
+  width: 82%;
+  height: 70%;
+  transform: translateY(-50%);
+  opacity: 0.36;
+}
+
+.omna-orb-label {
+  position: relative;
+  z-index: 2;
+  max-width: 12rem;
+  text-shadow: 0 0 14px rgba(152, 226, 255, 0.18);
+}
+
+.omna-disconnect-orb {
+  margin-top: clamp(0.18rem, 0.44svh, 0.34rem);
+  min-width: 6.4rem;
+  min-height: 2.2rem;
+  border-radius: 999px;
+  padding: 0 1rem;
+  font-size: clamp(0.66rem, min(0.8vw, 1.28svh), 0.76rem);
+  font-weight: 500;
+}
+
+.omna-mode-selector {
+  display: flex;
+  width: min(100%, 39rem);
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  margin-top: clamp(0.12rem, 0.35svh, 0.28rem);
+}
+
+.omna-mode-orbits {
+  position: relative;
+  width: min(100%, 38rem);
+  height: clamp(5.3rem, 10.8svh, 7.1rem);
+  border-radius: 0 0 999px 999px;
+  background:
+    radial-gradient(ellipse at 50% 6%, rgba(77, 184, 255, 0.1), transparent 58%),
+    radial-gradient(ellipse at 50% 84%, rgba(39, 124, 255, 0.08), transparent 56%);
+  box-shadow: inset 0 1px 0 rgba(126, 224, 255, 0.06);
+}
+
+.omna-mode-orbits::before {
+  content: "";
+  position: absolute;
+  inset: 3% 7% auto;
+  height: 55%;
+  border-bottom: 1px solid rgba(115, 213, 255, 0.12);
+  border-radius: 0 0 999px 999px;
+  filter: drop-shadow(0 0 16px rgba(65, 173, 255, 0.12));
+  pointer-events: none;
+}
+
+.omna-mode-orb {
+  display: grid;
+  place-items: center;
+  position: absolute;
+  top: clamp(0.52rem, 1.1svh, 0.8rem);
+  width: clamp(8rem, 12.8vw, 10.8rem);
+  min-height: clamp(2.7rem, 5.5svh, 3.55rem);
+  min-width: 0;
+  border-radius: 999px;
+  padding: 0.45rem 0.9rem;
+  color: rgba(226, 246, 255, 0.7);
+  font-size: clamp(0.78rem, min(0.95vw, 1.5svh), 0.92rem);
+  font-weight: 500;
+  line-height: 1.05;
+}
+
+.omna-mode-orb:nth-child(1) {
+  left: 6%;
+  transform: translateY(0.8rem) rotate(-5deg);
+}
+
+.omna-mode-orb:nth-child(2) {
+  left: 50%;
+  top: clamp(2.2rem, 4.4svh, 3rem);
+  transform: translateX(-50%);
+}
+
+.omna-mode-orb:nth-child(3) {
+  right: 6%;
+  transform: translateY(0.8rem) rotate(5deg);
+}
+
+.omna-mode-orb-active {
+  border-color: rgba(178, 241, 255, 0.38);
+  color: rgba(255, 255, 255, 0.94);
+  box-shadow:
+    inset 0 0 34px rgba(104, 219, 255, 0.16),
+    inset 0 -16px 28px rgba(2, 25, 80, 0.34),
+    0 0 44px rgba(70, 190, 255, 0.22);
+}
+
+.omna-quiet-tools {
+  display: flex;
+  width: min(100%, 18rem);
+  justify-content: center;
+  gap: clamp(0.42rem, 1vw, 0.72rem);
+  margin-top: clamp(0.42rem, 0.88svh, 0.66rem);
+  opacity: 0.58;
+  transition: opacity 180ms ease;
+}
+
+.omna-quiet-tools:hover {
+  opacity: 0.86;
 }
 
 .omna-intro-cue,
@@ -396,12 +627,7 @@ button {
 .omna-memory,
 .omna-product-path {
   width: min(100%, 22rem);
-  border-radius: 1rem;
-  border: 1px solid rgba(125, 201, 255, 0.1);
-  background: rgba(4, 17, 35, 0.24);
   color: rgba(211, 234, 255, 0.52);
-  backdrop-filter: blur(16px);
-  box-shadow: inset 0 0 24px rgba(73, 170, 255, 0.032);
 }
 
 .omna-intro-cue {
@@ -422,47 +648,34 @@ button {
 
 .omna-circle,
 .omna-reminder {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 0.52rem;
-  margin-top: clamp(0.48rem, 1svh, 0.72rem);
-  padding: 0.54rem 0.64rem;
-  text-align: left;
+  display: block;
+  width: auto;
+  min-width: 0;
+  text-align: center;
 }
 
 .omna-circle span,
 .omna-reminder span,
 .omna-product-path > span {
-  display: block;
-  color: rgba(201, 226, 250, 0.42);
-  font-size: clamp(0.56rem, min(0.78vw, 1.32svh), 0.68rem);
-  line-height: 1.15;
+  display: none;
 }
 
 .omna-circle strong {
-  display: block;
-  margin-top: 0.1rem;
-  color: rgba(232, 246, 255, 0.84);
-  font-size: clamp(0.72rem, min(0.96vw, 1.55svh), 0.86rem);
-  font-weight: 500;
+  display: none;
 }
 
 .omna-circle button,
 .omna-reminder button,
 .omna-product-path button {
-  min-height: 1.82rem;
+  display: grid;
+  place-items: center;
+  width: auto;
+  min-height: 0;
   border-radius: 999px;
-  border: 1px solid rgba(143, 213, 255, 0.16);
-  background: rgba(125, 221, 255, 0.08);
-  padding: 0 0.62rem;
-  color: rgba(231, 247, 255, 0.72);
-  font-size: clamp(0.6rem, min(0.82vw, 1.35svh), 0.72rem);
-  line-height: 1;
-  transition:
-    border-color 180ms ease,
-    color 180ms ease,
-    background 180ms ease;
+  padding: 0.42rem 0.7rem;
+  color: rgba(230, 247, 255, 0.62);
+  font-size: clamp(0.58rem, min(0.7vw, 1.16svh), 0.66rem);
+  line-height: 1.08;
 }
 
 .omna-circle button:hover,
@@ -475,47 +688,58 @@ button {
 .omna-circle small,
 .omna-reminder small,
 .omna-product-path small {
-  grid-column: 1 / -1;
+  display: block;
   color: rgba(174, 213, 241, 0.44);
-  font-size: clamp(0.54rem, min(0.72vw, 1.2svh), 0.64rem);
+  font-size: clamp(0.48rem, min(0.62vw, 1svh), 0.56rem);
   line-height: 1.2;
+  margin-top: 0.28rem;
 }
 
 .omna-memory {
-  margin-top: clamp(0.48rem, 1svh, 0.72rem);
-  padding: 0.58rem 0.7rem;
+  display: grid;
+  place-items: center;
+  width: auto;
+  min-width: 0;
+  border-radius: 999px;
+  border: 0;
+  background: transparent;
+  padding: 0.42rem 0.5rem;
+  box-shadow: none;
 }
 
 .omna-memory-empty {
-  padding: 0.48rem 0.7rem;
+  padding: 0.32rem;
   text-align: center;
-  font-size: clamp(0.58rem, min(0.78vw, 1.3svh), 0.68rem);
+  font-size: clamp(0.5rem, min(0.66vw, 1.1svh), 0.58rem);
+  line-height: 1.1;
 }
 
 .omna-memory-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.35rem;
+  gap: 0.14rem;
+  width: 100%;
   text-align: center;
 }
 
 .omna-memory-grid strong {
   display: block;
   color: rgba(239, 250, 255, 0.9);
-  font-size: clamp(0.8rem, min(1.12vw, 1.8svh), 1rem);
+  font-size: clamp(0.54rem, min(0.72vw, 1.18svh), 0.66rem);
   font-weight: 400;
   line-height: 1;
 }
 
 .omna-memory-grid span {
-  display: block;
-  margin-top: 0.2rem;
+  display: none;
+  margin-top: 0.12rem;
   color: rgba(190, 218, 244, 0.44);
   font-size: clamp(0.5rem, min(0.7vw, 1.15svh), 0.62rem);
   line-height: 1.1;
 }
 
 .omna-memory p {
+  display: none;
   margin: 0.45rem 0 0;
   color: rgba(207, 233, 255, 0.46);
   font-size: clamp(0.56rem, min(0.78vw, 1.3svh), 0.68rem);
@@ -538,9 +762,9 @@ button {
 
 .omna-session-goal {
   width: min(100%, 22rem);
-  margin-top: clamp(0.42rem, 1svh, 0.72rem);
-  color: rgba(211, 234, 255, 0.5);
-  font-size: clamp(0.64rem, min(0.86vw, 1.45svh), 0.78rem);
+  margin-top: clamp(0.32rem, 0.82svh, 0.58rem);
+  color: rgba(211, 234, 255, 0.38);
+  font-size: clamp(0.58rem, min(0.78vw, 1.3svh), 0.7rem);
   line-height: 1.15;
   text-align: center;
 }
@@ -689,35 +913,435 @@ button {
   color: rgba(220, 246, 255, 0.82);
 }
 
+.mmatrix-stats-panel {
+  border-color: rgba(146, 210, 255, 0.065) !important;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(74, 176, 255, 0.07), transparent 52%),
+    rgba(1, 7, 15, 0.23) !important;
+  box-shadow:
+    inset 0 0 26px rgba(65, 155, 255, 0.032),
+    0 0 38px rgba(0, 0, 0, 0.18) !important;
+}
+
+.mmatrix-stat-item {
+  border-color: rgba(255, 255, 255, 0.055) !important;
+}
+
+.mmatrix-stat-glyph {
+  opacity: 0.5;
+  filter: drop-shadow(0 0 10px rgba(36, 158, 255, 0.14));
+}
+
+.mmatrix-stat-value {
+  color: rgba(246, 251, 255, 0.68) !important;
+}
+
+.mmatrix-stat-label {
+  color: rgba(195, 219, 243, 0.28) !important;
+}
+
+/* Plasma control deck: one future-console system under the organism. */
+.mmatrix-actions {
+  position: relative;
+  isolation: isolate;
+}
+
+.mmatrix-stage[data-joined="true"] .mmatrix-actions,
+.mmatrix-stage[data-session="intro"] .mmatrix-actions {
+  width: min(100%, 43rem);
+  border-radius: clamp(1.1rem, 2.4svh, 1.6rem);
+  border: 1px solid rgba(111, 209, 255, 0.16);
+  background:
+    linear-gradient(110deg, rgba(54, 166, 255, 0.08), transparent 18%, transparent 82%, rgba(90, 225, 255, 0.07)),
+    radial-gradient(ellipse at 50% 0%, rgba(90, 210, 255, 0.17), transparent 58%),
+    radial-gradient(ellipse at 50% 120%, rgba(23, 80, 220, 0.18), transparent 62%),
+    rgba(1, 9, 23, 0.48);
+  padding: clamp(0.68rem, 1.35svh, 0.95rem);
+  box-shadow:
+    inset 0 1px 0 rgba(196, 245, 255, 0.11),
+    inset 0 -28px 48px rgba(1, 7, 28, 0.42),
+    inset 0 0 44px rgba(79, 190, 255, 0.055),
+    0 0 54px rgba(36, 140, 255, 0.13);
+  backdrop-filter: blur(26px);
+}
+
+.mmatrix-stage[data-joined="true"] .mmatrix-actions::before,
+.mmatrix-stage[data-session="intro"] .mmatrix-actions::before {
+  content: "";
+  position: absolute;
+  inset: 0.42rem;
+  z-index: -1;
+  border-radius: clamp(0.85rem, 1.9svh, 1.25rem);
+  border: 1px solid rgba(103, 218, 255, 0.08);
+  background:
+    linear-gradient(90deg, transparent 0 12%, rgba(114, 230, 255, 0.12) 12% 12.35%, transparent 12.35% 87.65%, rgba(114, 230, 255, 0.12) 87.65% 88%, transparent 88%),
+    repeating-linear-gradient(90deg, rgba(111, 208, 255, 0.055) 0 1px, transparent 1px 4.2rem);
+  mask-image: linear-gradient(90deg, transparent, black 16%, black 84%, transparent);
+  pointer-events: none;
+}
+
+.mmatrix-stage[data-joined="true"] .mmatrix-actions::after,
+.mmatrix-stage[data-session="intro"] .mmatrix-actions::after {
+  content: "";
+  position: absolute;
+  inset: -1px 8%;
+  z-index: -1;
+  border-radius: inherit;
+  background: linear-gradient(90deg, transparent, rgba(106, 225, 255, 0.28), transparent);
+  filter: blur(18px);
+  opacity: 0.4;
+  animation: omna-console-glow 6.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.omna-mode-selector {
+  width: min(100%, 39rem);
+  gap: clamp(0.45rem, 0.9svh, 0.64rem);
+  margin-top: 0;
+}
+
+.omna-mode-orbits {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  position: relative;
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  gap: clamp(0.42rem, 0.9vw, 0.68rem);
+  border-radius: clamp(0.82rem, 1.7svh, 1.15rem);
+  background:
+    linear-gradient(180deg, rgba(120, 232, 255, 0.08), rgba(12, 48, 126, 0.04)),
+    rgba(2, 12, 28, 0.24);
+  padding: 0.42rem;
+  box-shadow:
+    inset 0 0 26px rgba(71, 180, 255, 0.045),
+    0 0 28px rgba(35, 131, 255, 0.065);
+}
+
+.omna-mode-orbits::before {
+  inset: auto 0.7rem -0.15rem;
+  height: 1px;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, rgba(129, 234, 255, 0.5), transparent);
+  filter: blur(0.5px);
+}
+
+.omna-mode-orb,
+.omna-mode-orb:nth-child(1),
+.omna-mode-orb:nth-child(2),
+.omna-mode-orb:nth-child(3) {
+  position: relative;
+  top: auto;
+  right: auto;
+  left: auto;
+  width: auto;
+  min-height: clamp(2.7rem, 5.2svh, 3.35rem);
+  transform: none;
+  border-radius: clamp(0.72rem, 1.5svh, 1rem);
+  padding: 0.5rem 0.7rem;
+  font-size: clamp(0.8rem, min(0.98vw, 1.58svh), 0.94rem);
+}
+
+.omna-mode-orb::after,
+.omna-primary-orb::after,
+.omna-disconnect-orb::after,
+.omna-audio-profile button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    linear-gradient(115deg, transparent 0 35%, rgba(164, 246, 255, 0.12) 48%, transparent 62%),
+    radial-gradient(ellipse at 50% 0%, rgba(143, 238, 255, 0.12), transparent 54%);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.omna-mode-orb-active {
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(146, 240, 255, 0.28), transparent 58%),
+    linear-gradient(180deg, rgba(38, 148, 255, 0.28), rgba(3, 22, 66, 0.28)),
+    rgba(6, 29, 68, 0.58);
+  border-color: rgba(175, 239, 255, 0.48);
+  box-shadow:
+    inset 0 0 32px rgba(112, 224, 255, 0.16),
+    inset 0 -18px 34px rgba(1, 16, 55, 0.44),
+    0 0 38px rgba(76, 195, 255, 0.24);
+}
+
+.omna-audio-profile {
+  width: min(100%, 31rem);
+  margin-top: clamp(0.52rem, 1.05svh, 0.72rem);
+  gap: 0.55rem;
+}
+
+.omna-audio-profile > div {
+  width: min(20rem, 100%);
+  gap: 0.42rem;
+}
+
+.omna-audio-profile button {
+  position: relative;
+  overflow: hidden;
+  min-height: 2.05rem;
+  border-radius: 0.78rem;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(106, 220, 255, 0.14), transparent 55%),
+    rgba(4, 17, 35, 0.2);
+}
+
+.omna-audio-profile-active {
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(133, 237, 255, 0.28), transparent 58%),
+    rgba(31, 118, 230, 0.24) !important;
+}
+
+.omna-primary-orb,
+.omna-disconnect-orb {
+  border-radius: clamp(0.82rem, 1.6svh, 1.08rem);
+}
+
+.omna-primary-orb {
+  width: min(100%, 18rem);
+}
+
+.omna-disconnect-orb {
+  margin-top: clamp(0.5rem, 0.95svh, 0.72rem);
+}
+
+.omna-voice-calibration,
+.omna-privacy-note,
+.omna-session-goal {
+  width: min(100%, 34rem);
+  border-radius: clamp(0.74rem, 1.5svh, 1rem);
+}
+
+@keyframes omna-console-glow {
+  0%,
+  100% {
+    opacity: 0.28;
+    transform: scaleX(0.92);
+  }
+
+  50% {
+    opacity: 0.48;
+    transform: scaleX(1.04);
+  }
+}
+
+/* Studio pass: restrained instrument panel, not decorative neon. */
+.mmatrix-stage[data-joined="true"] .mmatrix-actions,
+.mmatrix-stage[data-session="intro"] .mmatrix-actions {
+  overflow: hidden;
+  border-radius: 1.25rem;
+  border-color: rgba(149, 225, 255, 0.18);
+  background:
+    linear-gradient(180deg, rgba(121, 216, 255, 0.085), rgba(4, 20, 49, 0.18) 38%, rgba(0, 5, 14, 0.52)),
+    linear-gradient(90deg, rgba(47, 134, 255, 0.08), transparent 18%, transparent 82%, rgba(102, 230, 255, 0.07)),
+    rgba(0, 6, 16, 0.68);
+  box-shadow:
+    inset 0 1px 0 rgba(230, 252, 255, 0.14),
+    inset 0 -1px 0 rgba(17, 79, 149, 0.3),
+    inset 0 0 56px rgba(64, 177, 255, 0.06),
+    0 22px 80px rgba(0, 0, 0, 0.34),
+    0 0 58px rgba(38, 145, 255, 0.12);
+}
+
+.mmatrix-stage[data-joined="true"] .mmatrix-actions::before,
+.mmatrix-stage[data-session="intro"] .mmatrix-actions::before {
+  inset: 0.55rem;
+  border-radius: 0.9rem;
+  background:
+    linear-gradient(90deg, transparent 0 8%, rgba(119, 229, 255, 0.16) 8% 8.16%, transparent 8.16% 91.84%, rgba(119, 229, 255, 0.16) 91.84% 92%, transparent 92%),
+    linear-gradient(180deg, rgba(134, 233, 255, 0.08), transparent 22%, transparent 78%, rgba(58, 152, 255, 0.06)),
+    repeating-linear-gradient(90deg, rgba(133, 218, 255, 0.04) 0 1px, transparent 1px 3.75rem);
+  opacity: 0.88;
+}
+
+.omna-deck-kicker {
+  align-self: stretch;
+  margin: 0 0 0.42rem;
+  color: rgba(187, 226, 250, 0.46);
+  font-size: clamp(0.54rem, min(0.68vw, 1.05svh), 0.64rem);
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  line-height: 1;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.omna-mode-orbits {
+  border: 1px solid rgba(128, 221, 255, 0.1);
+  background:
+    linear-gradient(180deg, rgba(98, 212, 255, 0.095), rgba(2, 13, 36, 0.34)),
+    rgba(0, 7, 20, 0.34);
+}
+
+.omna-mode-orb,
+.omna-mode-orb:nth-child(1),
+.omna-mode-orb:nth-child(2),
+.omna-mode-orb:nth-child(3) {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 0.5rem;
+  align-items: center;
+  justify-items: start;
+  border-radius: 0.82rem;
+  background:
+    linear-gradient(180deg, rgba(119, 224, 255, 0.08), rgba(3, 18, 48, 0.34)),
+    rgba(1, 11, 29, 0.42);
+  text-align: left;
+}
+
+.omna-mode-index {
+  grid-row: 1 / 3;
+  color: rgba(130, 221, 255, 0.48);
+  font-size: 0.62em;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.omna-mode-text {
+  color: rgba(237, 249, 255, 0.84);
+  line-height: 1;
+}
+
+.omna-mode-signal {
+  display: block;
+  width: 100%;
+  height: 0.22rem;
+  margin-top: 0.4rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(112, 199, 255, 0.1);
+}
+
+.omna-mode-signal::before {
+  content: "";
+  display: block;
+  width: 38%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, rgba(47, 150, 255, 0.44), rgba(127, 239, 255, 0.78));
+  box-shadow: 0 0 14px rgba(89, 216, 255, 0.26);
+  transform-origin: left center;
+}
+
+.omna-mode-orb-active .omna-mode-index,
+.omna-mode-orb-active .omna-mode-text {
+  color: rgba(255, 255, 255, 0.96);
+}
+
+.omna-mode-orb-active .omna-mode-signal::before {
+  width: 86%;
+}
+
+.omna-primary-orb,
+.omna-disconnect-orb,
+.omna-audio-profile button {
+  border-radius: 0.82rem;
+}
+
+.omna-primary-orb {
+  justify-self: center;
+  min-width: min(100%, 18rem);
+  background:
+    linear-gradient(180deg, rgba(127, 229, 255, 0.16), rgba(9, 52, 134, 0.18)),
+    rgba(1, 12, 31, 0.44);
+}
+
+.omna-disconnect-orb {
+  min-width: 5.4rem;
+  min-height: 2.05rem;
+  background:
+    linear-gradient(180deg, rgba(127, 229, 255, 0.075), rgba(9, 52, 134, 0.09)),
+    rgba(1, 12, 31, 0.28);
+  color: rgba(226, 244, 255, 0.62);
+}
+
+.omna-audio-profile > div {
+  border-radius: 0.9rem;
+  background: rgba(0, 8, 22, 0.18);
+  padding: 0.24rem;
+}
+
+.omna-voice-calibration,
+.omna-privacy-note,
+.omna-session-goal {
+  background:
+    linear-gradient(180deg, rgba(95, 205, 255, 0.055), rgba(2, 12, 34, 0.24)),
+    rgba(0, 8, 22, 0.24);
+}
+
+.mmatrix-stats-panel {
+  border-radius: 0.95rem !important;
+}
+
+@keyframes omna-light-stroke {
+  from {
+    transform: translateX(-18%) scaleX(0.72);
+    opacity: 0.18;
+  }
+
+  50% {
+    transform: translateX(0) scaleX(1);
+    opacity: 0.38;
+  }
+
+  to {
+    transform: translateX(18%) scaleX(0.72);
+    opacity: 0.18;
+  }
+}
+
+@keyframes omna-control-breathe {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+    box-shadow:
+      inset 0 0 22px rgba(98, 214, 255, 0.035),
+      0 0 20px rgba(40, 151, 255, 0.045);
+  }
+
+  50% {
+    transform: translateY(-1px) scale(1.01);
+    box-shadow:
+      inset 0 0 26px rgba(121, 230, 255, 0.055),
+      0 0 28px rgba(61, 182, 255, 0.07);
+  }
+}
+
 @media (max-height: 790px) {
   .mmatrix-stage {
-    padding-top: clamp(3.95rem, 7.8svh, 5.25rem);
+    padding-top: clamp(3.55rem, 6.6svh, 4.55rem);
     padding-bottom: 0.52rem;
   }
 
   .mmatrix-sphere-slot {
-    flex-basis: clamp(13.6rem, 35.5svh, 22.5rem);
+    flex-basis: clamp(20rem, 50svh, 32rem);
   }
 
   .mmatrix-title {
-    font-size: clamp(1.95rem, min(4.35vw, 5.55svh), 3.85rem);
-    line-height: 0.96;
+    font-size: clamp(1.2rem, min(2.15vw, 2.9svh), 2rem);
+    line-height: 1.04;
   }
 
   .mmatrix-subtitle {
-    font-size: clamp(0.86rem, min(1.15vw, 2.05vh), 1.15rem);
+    font-size: clamp(0.66rem, min(0.82vw, 1.35vh), 0.82rem);
   }
 
   .mmatrix-actions {
-    margin-top: clamp(0.65rem, 1.8vh, 1.05rem);
+    margin-top: clamp(0.28rem, 0.7vh, 0.5rem);
   }
 
   .mmatrix-stats-slot {
-    flex-basis: clamp(5.4rem, 12.8svh, 7.2rem);
+    flex-basis: clamp(4.7rem, 10.8svh, 6.2rem);
   }
 
   .mmatrix-stage[data-joined="true"] .mmatrix-sphere-slot {
-    flex-basis: clamp(10.8rem, 28svh, 18.5rem);
+    flex-basis: clamp(18rem, 42svh, 27rem);
   }
 
   .mmatrix-life-line {
@@ -731,16 +1355,17 @@ button {
 
 @media (max-width: 520px) {
   .mmatrix-stage {
-    padding-inline: 0.9rem;
+    padding-inline: 0.82rem;
+    padding-top: clamp(3.55rem, 7.6svh, 4.45rem);
   }
 
   .mmatrix-sphere-slot {
-    flex-basis: clamp(15.6rem, 33svh, 20.5rem);
-    width: 128vw;
+    flex-basis: clamp(19.5rem, 45svh, 25.5rem);
+    width: 152vw;
   }
 
   .mmatrix-sphere {
-    width: min(166vw, 48rem);
+    width: min(190vw, 58rem);
   }
 
   .mmatrix-copy {
@@ -749,7 +1374,7 @@ button {
   }
 
   .mmatrix-title {
-    font-size: clamp(1.82rem, 8.75vw, 2.42rem);
+    font-size: clamp(1.08rem, 4.6vw, 1.38rem);
     line-height: 1.04;
     margin-inline: auto;
     max-width: calc(100vw - 2rem);
@@ -757,8 +1382,8 @@ button {
   }
 
   .mmatrix-stage[data-session="intro"] .mmatrix-title {
-    max-width: 19.5rem;
-    font-size: clamp(1.3rem, 6.25vw, 1.66rem);
+    max-width: 20rem;
+    font-size: clamp(1.18rem, 5vw, 1.48rem);
     line-height: 1.12;
   }
 
@@ -769,22 +1394,22 @@ button {
   .mmatrix-status {
     width: auto;
     max-width: 20.4rem;
-    margin-top: 0.02rem;
+    margin-top: clamp(-0.22rem, -0.45svh, 0rem);
     gap: 0.45rem;
     padding: 0.28rem 0.66rem;
-    font-size: clamp(0.62rem, 2.9vw, 0.74rem);
+    font-size: clamp(0.56rem, 2.45vw, 0.66rem);
     line-height: 1.2;
   }
 
   .mmatrix-subtitle {
     max-width: 19rem;
-    font-size: clamp(0.78rem, 3.7vw, 0.93rem);
+    font-size: clamp(0.68rem, 3vw, 0.78rem);
   }
 
   .mmatrix-actions {
     width: 100%;
-    max-width: 20rem;
-    margin-top: clamp(0.65rem, 1.5svh, 0.95rem);
+    max-width: 21rem;
+    margin-top: clamp(0.26rem, 0.7svh, 0.48rem);
   }
 
   .mmatrix-life-line {
@@ -834,7 +1459,7 @@ button {
   .omna-reminder,
   .omna-memory,
   .omna-product-path {
-    width: min(100%, 18.5rem);
+    width: auto;
   }
 
   .omna-intro-cue {
@@ -851,20 +1476,51 @@ button {
   .omna-reminder,
   .omna-memory,
   .omna-product-path {
-    margin-top: 0.42rem;
-    padding: 0.46rem 0.52rem;
+    margin-top: 0;
+    padding: 0.28rem;
   }
 
   .omna-circle button,
   .omna-reminder button,
   .omna-product-path button {
-    min-height: 1.62rem;
-    padding-inline: 0.48rem;
-    font-size: 0.58rem;
+    min-height: 0;
+    padding: 0.3rem;
+    font-size: 0.54rem;
   }
 
   .omna-session-goal {
     width: min(100%, 18.5rem);
+  }
+
+  .omna-primary-orb {
+    width: min(100%, 14.8rem);
+    height: 2.75rem;
+    font-size: clamp(0.74rem, 3.1vw, 0.86rem);
+  }
+
+  .omna-mode-orbits {
+    width: 100%;
+    height: auto;
+    gap: 0.32rem;
+    padding: 0.34rem;
+  }
+
+  .omna-mode-orb,
+  .omna-mode-orb:nth-child(1),
+  .omna-mode-orb:nth-child(2),
+  .omna-mode-orb:nth-child(3) {
+    position: relative;
+    inset: auto;
+    width: auto;
+    min-height: 2.36rem;
+    transform: none;
+    font-size: clamp(0.62rem, 2.65vw, 0.72rem);
+  }
+
+  .omna-quiet-tools {
+    width: min(100%, 14rem);
+    gap: 0.3rem;
+    margin-top: 0.34rem;
   }
 
   .mmatrix-ritual-note {
@@ -875,8 +1531,8 @@ button {
 
   .mmatrix-stats-slot {
     width: 100%;
-    max-width: 17.25rem;
-    flex-basis: clamp(5.5rem, 11.6svh, 6.15rem);
+    max-width: 16.9rem;
+    flex-basis: clamp(4.95rem, 10.4svh, 5.65rem);
   }
 
   .mmatrix-stats-panel {
@@ -913,5 +1569,652 @@ button {
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
     transition-duration: 0.001ms !important;
+  }
+}
+
+/* Final orbit dock: compact plasma controls, visually born from the sphere. */
+.mmatrix-stage[data-joined="true"] .mmatrix-actions,
+.mmatrix-stage[data-session="intro"] .mmatrix-actions {
+  width: min(100%, 36rem);
+  border: 0;
+  background: transparent;
+  padding: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  overflow: visible;
+}
+
+.mmatrix-stage[data-joined="true"] .mmatrix-actions {
+  margin-top: auto;
+}
+
+.mmatrix-stage[data-joined="true"] .mmatrix-stats-slot {
+  margin-top: clamp(0.52rem, 1.15svh, 0.85rem);
+}
+
+.mmatrix-stage[data-joined="true"] .mmatrix-actions::before,
+.mmatrix-stage[data-session="intro"] .mmatrix-actions::before,
+.mmatrix-stage[data-joined="true"] .mmatrix-actions::after,
+.mmatrix-stage[data-session="intro"] .mmatrix-actions::after {
+  display: none;
+}
+
+.mmatrix-stage[data-joined="true"] .mmatrix-copy {
+  opacity: 0;
+  max-height: 0;
+  margin: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.omna-deck-kicker,
+.omna-mode-index,
+.omna-mode-signal {
+  display: none;
+}
+
+.omna-mode-selector {
+  width: min(100%, 32rem);
+  margin-top: 0;
+}
+
+.omna-mode-orbits {
+  display: flex;
+  position: relative;
+  align-items: flex-end;
+  justify-content: center;
+  gap: clamp(0.42rem, 1.3vw, 0.85rem);
+  width: min(100%, 30rem);
+  height: clamp(4.2rem, 8.8svh, 5.7rem);
+  min-height: 0;
+  border: 0;
+  border-radius: 999px;
+  background:
+    radial-gradient(ellipse at 50% 85%, rgba(75, 188, 255, 0.16), transparent 58%),
+    linear-gradient(90deg, transparent, rgba(85, 202, 255, 0.08), transparent);
+  padding: 0;
+  box-shadow: none;
+}
+
+.omna-mode-orbits::before {
+  content: "";
+  position: absolute;
+  inset: auto 8% 0.4rem;
+  height: 42%;
+  border: 0;
+  border-bottom: 1px solid rgba(124, 225, 255, 0.16);
+  border-radius: 0 0 999px 999px;
+  background: transparent;
+  filter: drop-shadow(0 0 16px rgba(67, 181, 255, 0.22));
+  pointer-events: none;
+}
+
+.omna-mode-orb,
+.omna-mode-orb:nth-child(1),
+.omna-mode-orb:nth-child(2),
+.omna-mode-orb:nth-child(3) {
+  display: grid;
+  place-items: center;
+  position: relative;
+  inset: auto;
+  width: clamp(4.75rem, 8.4vw, 6.4rem);
+  min-height: clamp(2.65rem, 5.4svh, 3.55rem);
+  transform: none;
+  border-radius: 999px;
+  border: 1px solid rgba(135, 222, 255, 0.2);
+  background:
+    radial-gradient(circle at 50% 22%, rgba(149, 241, 255, 0.28), transparent 26%),
+    radial-gradient(circle at 50% 70%, rgba(30, 118, 255, 0.23), transparent 62%),
+    rgba(2, 13, 35, 0.34);
+  padding: 0.35rem 0.55rem;
+  color: rgba(230, 247, 255, 0.76);
+  font-size: clamp(0.68rem, min(0.82vw, 1.35svh), 0.78rem);
+  line-height: 1;
+  text-align: center;
+  box-shadow:
+    inset 0 0 22px rgba(104, 220, 255, 0.08),
+    inset 0 -16px 26px rgba(2, 19, 62, 0.32),
+    0 0 28px rgba(47, 158, 255, 0.1);
+  backdrop-filter: blur(18px);
+}
+
+.omna-mode-orb:nth-child(1) {
+  transform: translateY(0.62rem) rotate(-5deg);
+}
+
+.omna-mode-orb:nth-child(2) {
+  width: clamp(5.35rem, 9.4vw, 7.25rem);
+  min-height: clamp(3.05rem, 6.1svh, 4rem);
+  transform: translateY(0.02rem);
+}
+
+.omna-mode-orb:nth-child(3) {
+  transform: translateY(0.62rem) rotate(5deg);
+}
+
+.omna-mode-orb::before {
+  inset: 11%;
+  height: auto;
+  border-radius: 999px;
+  background:
+    conic-gradient(from 110deg, transparent, rgba(120, 230, 255, 0.26), transparent 34%, rgba(34, 126, 255, 0.24), transparent 72%, rgba(139, 243, 255, 0.2), transparent),
+    radial-gradient(circle, rgba(63, 175, 255, 0.14), transparent 62%);
+  filter: blur(3px);
+  opacity: 0.68;
+  animation: omna-orb-drift-soft 8s linear infinite;
+}
+
+.omna-mode-orb::after {
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(180, 250, 255, 0.18), transparent 52%),
+    linear-gradient(120deg, transparent, rgba(146, 238, 255, 0.12), transparent);
+  opacity: 0.58;
+}
+
+.omna-mode-orb-active {
+  border-color: rgba(177, 241, 255, 0.48);
+  color: rgba(255, 255, 255, 0.98);
+  background:
+    radial-gradient(circle at 50% 22%, rgba(172, 252, 255, 0.42), transparent 27%),
+    radial-gradient(circle at 50% 72%, rgba(42, 150, 255, 0.34), transparent 64%),
+    rgba(5, 25, 62, 0.48);
+  box-shadow:
+    inset 0 0 32px rgba(119, 227, 255, 0.16),
+    inset 0 -18px 30px rgba(2, 20, 64, 0.32),
+    0 0 42px rgba(76, 195, 255, 0.24);
+}
+
+.omna-mode-text {
+  display: block;
+  color: currentColor;
+  text-shadow: 0 0 16px rgba(144, 229, 255, 0.2);
+}
+
+.omna-audio-profile {
+  width: min(100%, 18rem);
+  margin-top: clamp(0.3rem, 0.68svh, 0.48rem);
+  color: rgba(211, 234, 255, 0.38);
+  font-size: clamp(0.56rem, min(0.68vw, 1.12svh), 0.64rem);
+}
+
+.omna-audio-profile > div {
+  width: min(13.5rem, 100%);
+  border-radius: 999px;
+  background: transparent;
+  padding: 0;
+}
+
+.omna-audio-profile button {
+  min-height: 1.52rem;
+  border-radius: 999px;
+  border-color: rgba(125, 201, 255, 0.12);
+  background:
+    radial-gradient(circle at 50% 28%, rgba(106, 220, 255, 0.16), transparent 42%),
+    rgba(4, 17, 35, 0.16);
+  color: rgba(221, 240, 255, 0.54);
+}
+
+.omna-disconnect-orb {
+  margin-top: clamp(0.3rem, 0.68svh, 0.48rem);
+  min-width: 4.9rem;
+  min-height: 1.82rem;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 50% 20%, rgba(116, 225, 255, 0.12), transparent 40%),
+    rgba(2, 13, 35, 0.18);
+  color: rgba(226, 244, 255, 0.54);
+  font-size: clamp(0.58rem, min(0.7vw, 1.12svh), 0.66rem);
+  box-shadow:
+    inset 0 0 18px rgba(104, 220, 255, 0.045),
+    0 0 18px rgba(47, 158, 255, 0.05);
+}
+
+.omna-voice-calibration,
+.omna-privacy-note {
+  width: min(100%, 22rem);
+  border: 0;
+  background: transparent;
+  padding: 0.16rem 0.4rem;
+  color: rgba(210, 235, 255, 0.28);
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.omna-voice-meter {
+  height: 0.16rem;
+  margin-top: 0.28rem;
+}
+
+.omna-session-goal {
+  display: none;
+}
+
+.mmatrix-ritual-note {
+  display: none;
+}
+
+@keyframes omna-orb-drift-soft {
+  from {
+    transform: rotate(0deg) scale(1);
+  }
+
+  50% {
+    transform: rotate(180deg) scale(1.03);
+  }
+
+  to {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+@media (max-width: 520px) {
+  .mmatrix-stage[data-joined="true"] .mmatrix-actions,
+  .mmatrix-stage[data-session="intro"] .mmatrix-actions {
+    width: min(100%, 19rem);
+    max-width: 19rem;
+  }
+
+  .omna-mode-orbits {
+    width: min(100%, 18.2rem);
+    height: 4.65rem;
+    gap: 0.34rem;
+  }
+
+  .omna-mode-orb,
+  .omna-mode-orb:nth-child(1),
+  .omna-mode-orb:nth-child(2),
+  .omna-mode-orb:nth-child(3) {
+    width: clamp(4.2rem, 24vw, 5.2rem);
+    min-height: 2.48rem;
+    font-size: clamp(0.56rem, 2.45vw, 0.64rem);
+  }
+
+  .omna-mode-orb:nth-child(2) {
+    width: clamp(4.75rem, 27vw, 5.8rem);
+    min-height: 2.82rem;
+  }
+
+  .omna-audio-profile {
+    width: min(100%, 16rem);
+    font-size: 0.58rem;
+  }
+
+  .omna-disconnect-orb {
+    min-height: 1.7rem;
+  }
+}
+
+/* Organism controls v2: the UI is made from the same plasma as the sphere. */
+.mmatrix-stage[data-joined="true"] .mmatrix-actions,
+.mmatrix-stage[data-session="intro"] .mmatrix-actions {
+  position: relative;
+  width: min(100%, 34rem);
+  max-width: 34rem;
+  margin-inline: auto;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  overflow: visible;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.mmatrix-stage[data-joined="true"] .mmatrix-actions {
+  margin-top: auto;
+}
+
+.mmatrix-stage[data-joined="true"] .mmatrix-stats-slot {
+  margin-top: clamp(0.46rem, 1svh, 0.72rem);
+}
+
+.mmatrix-stage[data-joined="true"] .mmatrix-actions::before,
+.mmatrix-stage[data-session="intro"] .mmatrix-actions::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: clamp(3.15rem, 6.2svh, 4.3rem);
+  z-index: -1;
+  width: min(112%, 38rem);
+  height: clamp(3.4rem, 7svh, 4.8rem);
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background:
+    radial-gradient(ellipse at 50% 100%, rgba(63, 179, 255, 0.18), transparent 58%),
+    radial-gradient(ellipse at 50% 40%, rgba(121, 236, 255, 0.08), transparent 62%);
+  filter: blur(10px);
+  opacity: 0.88;
+  pointer-events: none;
+}
+
+.mmatrix-stage[data-joined="true"] .mmatrix-actions::after,
+.mmatrix-stage[data-session="intro"] .mmatrix-actions::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: clamp(3.62rem, 7.1svh, 5rem);
+  z-index: -1;
+  width: min(96%, 32rem);
+  height: clamp(2.7rem, 5.8svh, 4rem);
+  transform: translateX(-50%);
+  border-bottom: 1px solid rgba(122, 225, 255, 0.22);
+  border-radius: 0 0 999px 999px;
+  filter: drop-shadow(0 0 18px rgba(60, 178, 255, 0.2));
+  pointer-events: none;
+}
+
+.mmatrix-stage[data-joined="true"] .mmatrix-copy {
+  max-height: 0;
+  margin: 0;
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.mmatrix-status {
+  border-color: rgba(132, 226, 255, 0.1);
+  background:
+    radial-gradient(circle at 12% 50%, rgba(49, 165, 255, 0.18), transparent 16%),
+    radial-gradient(ellipse at 50% 0%, rgba(96, 207, 255, 0.1), transparent 62%),
+    rgba(1, 12, 28, 0.1);
+  color: rgba(224, 244, 255, 0.58) !important;
+  box-shadow:
+    inset 0 0 20px rgba(83, 190, 255, 0.035),
+    0 0 22px rgba(41, 147, 255, 0.05);
+}
+
+.omna-mode-selector {
+  width: min(100%, 30rem);
+  margin-top: 0;
+}
+
+.omna-mode-orbits {
+  display: flex;
+  position: relative;
+  align-items: flex-end;
+  justify-content: center;
+  gap: clamp(0.48rem, 1.25vw, 0.92rem);
+  width: min(100%, 29rem);
+  height: clamp(4.5rem, 8.7svh, 5.8rem);
+  min-height: 0;
+  margin-inline: auto;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  padding: 0;
+  box-shadow: none;
+}
+
+.omna-mode-orbits::before {
+  content: "";
+  position: absolute;
+  inset: auto 8% 0.52rem;
+  height: 45%;
+  border: 0;
+  border-bottom: 1px solid rgba(123, 226, 255, 0.17);
+  border-radius: 0 0 999px 999px;
+  background: transparent;
+  filter: drop-shadow(0 0 18px rgba(63, 181, 255, 0.26));
+  pointer-events: none;
+}
+
+.omna-mode-orb,
+.omna-mode-orb:nth-child(1),
+.omna-mode-orb:nth-child(2),
+.omna-mode-orb:nth-child(3),
+.omna-primary-orb,
+.omna-disconnect-orb {
+  display: grid;
+  place-items: center;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid rgba(136, 225, 255, 0.22);
+  border-radius: 48% 52% 50% 50% / 52% 48% 52% 48%;
+  background:
+    radial-gradient(circle at 50% 24%, rgba(172, 252, 255, 0.38), transparent 25%),
+    radial-gradient(circle at 48% 70%, rgba(35, 129, 255, 0.34), transparent 62%),
+    radial-gradient(circle at 50% 50%, rgba(3, 22, 58, 0.74), rgba(1, 8, 24, 0.82) 70%);
+  color: rgba(235, 249, 255, 0.82);
+  text-align: center;
+  box-shadow:
+    inset 0 0 26px rgba(104, 221, 255, 0.12),
+    inset 0 -18px 32px rgba(1, 16, 58, 0.42),
+    0 0 34px rgba(49, 160, 255, 0.13);
+  backdrop-filter: blur(18px);
+  animation: omna-plasma-node 9s ease-in-out infinite;
+}
+
+.omna-mode-orb::before,
+.omna-primary-orb::before,
+.omna-disconnect-orb::before {
+  content: "";
+  position: absolute;
+  inset: 10%;
+  z-index: -1;
+  border-radius: inherit;
+  background:
+    conic-gradient(from 120deg, transparent, rgba(126, 234, 255, 0.34), transparent 30%, rgba(36, 126, 255, 0.26), transparent 68%, rgba(145, 243, 255, 0.22), transparent),
+    radial-gradient(circle at 50% 50%, rgba(75, 178, 255, 0.16), transparent 62%);
+  filter: blur(4px);
+  opacity: 0.75;
+  animation: omna-orb-drift-soft 8s linear infinite;
+}
+
+.omna-mode-orb::after,
+.omna-primary-orb::after,
+.omna-disconnect-orb::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(214, 255, 255, 0.2), transparent 48%),
+    linear-gradient(132deg, transparent 18%, rgba(134, 233, 255, 0.12), transparent 56%);
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.omna-mode-orb {
+  width: clamp(4.75rem, 8.4vw, 6.25rem);
+  min-height: clamp(2.7rem, 5.25svh, 3.45rem);
+  padding: 0.42rem 0.58rem;
+  font-size: clamp(0.68rem, min(0.82vw, 1.32svh), 0.78rem);
+  line-height: 1;
+}
+
+.omna-mode-orb:nth-child(1) {
+  transform: translateY(0.62rem) rotate(-5deg);
+}
+
+.omna-mode-orb:nth-child(2) {
+  width: clamp(5.35rem, 9.4vw, 7.15rem);
+  min-height: clamp(3.08rem, 6svh, 4rem);
+}
+
+.omna-mode-orb:nth-child(3) {
+  transform: translateY(0.62rem) rotate(5deg);
+}
+
+.omna-mode-orb-active {
+  border-color: rgba(183, 246, 255, 0.52);
+  color: rgba(255, 255, 255, 0.98);
+  background:
+    radial-gradient(circle at 50% 24%, rgba(190, 255, 255, 0.52), transparent 26%),
+    radial-gradient(circle at 48% 72%, rgba(44, 154, 255, 0.45), transparent 64%),
+    radial-gradient(circle at 50% 50%, rgba(5, 31, 76, 0.82), rgba(1, 9, 27, 0.86) 72%);
+  box-shadow:
+    inset 0 0 36px rgba(126, 232, 255, 0.2),
+    inset 0 -18px 34px rgba(2, 21, 66, 0.42),
+    0 0 52px rgba(77, 197, 255, 0.28);
+}
+
+.omna-mode-text,
+.omna-orb-label {
+  position: relative;
+  z-index: 2;
+  color: currentColor;
+  text-shadow: 0 0 16px rgba(148, 232, 255, 0.22);
+}
+
+.omna-primary-orb {
+  width: clamp(8rem, 14vw, 10.5rem);
+  height: clamp(4.2rem, 8.4svh, 5.4rem);
+  margin-bottom: clamp(0.24rem, 0.8svh, 0.48rem);
+  padding: 0.8rem;
+  font-size: clamp(0.78rem, min(0.95vw, 1.5svh), 0.92rem);
+  line-height: 1.08;
+}
+
+.omna-disconnect-orb {
+  width: clamp(3.95rem, 6.8vw, 5.2rem);
+  min-width: 0;
+  min-height: clamp(2rem, 4svh, 2.5rem);
+  margin-top: clamp(0.28rem, 0.72svh, 0.48rem);
+  padding: 0.45rem 0.62rem;
+  color: rgba(225, 244, 255, 0.58);
+  font-size: clamp(0.54rem, min(0.66vw, 1.06svh), 0.62rem);
+  box-shadow:
+    inset 0 0 18px rgba(104, 221, 255, 0.06),
+    inset 0 -12px 22px rgba(1, 16, 58, 0.28),
+    0 0 22px rgba(49, 160, 255, 0.08);
+}
+
+.omna-audio-profile {
+  width: min(100%, 17.5rem);
+  margin-top: clamp(0.28rem, 0.65svh, 0.45rem);
+  color: rgba(205, 233, 255, 0.34);
+  font-size: clamp(0.52rem, min(0.66vw, 1.08svh), 0.6rem);
+}
+
+.omna-audio-profile > div {
+  width: min(13rem, 100%);
+  gap: 0.3rem;
+  background: transparent;
+  padding: 0;
+}
+
+.omna-audio-profile button {
+  min-height: 1.44rem;
+  border-radius: 999px;
+  border-color: rgba(128, 214, 255, 0.12);
+  background:
+    radial-gradient(circle at 50% 25%, rgba(127, 234, 255, 0.15), transparent 38%),
+    rgba(2, 13, 35, 0.16);
+  color: rgba(221, 240, 255, 0.5);
+  box-shadow: inset 0 0 14px rgba(95, 204, 255, 0.04);
+}
+
+.omna-audio-profile-active {
+  color: rgba(255, 255, 255, 0.86) !important;
+  background:
+    radial-gradient(circle at 50% 24%, rgba(151, 246, 255, 0.26), transparent 42%),
+    rgba(24, 101, 205, 0.22) !important;
+  box-shadow:
+    inset 0 0 18px rgba(119, 226, 255, 0.12),
+    0 0 18px rgba(62, 177, 255, 0.12);
+}
+
+.omna-voice-calibration,
+.omna-privacy-note,
+.omna-soft-message {
+  width: min(100%, 21rem);
+  border: 0;
+  background: transparent;
+  padding: 0.14rem 0.4rem;
+  color: rgba(211, 235, 255, 0.3);
+  font-size: clamp(0.5rem, min(0.64vw, 1.02svh), 0.58rem);
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.omna-soft-message {
+  text-align: center;
+}
+
+.omna-soft-message button {
+  margin-top: 0.15rem;
+  color: rgba(158, 234, 255, 0.7);
+  text-decoration: underline;
+  text-decoration-color: rgba(158, 234, 255, 0.2);
+  text-underline-offset: 0.18rem;
+}
+
+.omna-privacy-note {
+  animation: omna-soft-fade 8s ease forwards;
+}
+
+.omna-voice-meter {
+  height: 0.16rem;
+  margin-top: 0.26rem;
+}
+
+.omna-session-goal,
+.mmatrix-ritual-note {
+  display: none;
+}
+
+@keyframes omna-plasma-node {
+  0%,
+  100% {
+    border-radius: 48% 52% 50% 50% / 52% 48% 52% 48%;
+    transform-origin: center;
+  }
+
+  33% {
+    border-radius: 52% 48% 46% 54% / 48% 55% 45% 52%;
+  }
+
+  66% {
+    border-radius: 45% 55% 53% 47% / 54% 46% 54% 46%;
+  }
+}
+
+@keyframes omna-soft-fade {
+  0%,
+  58% {
+    opacity: 0.72;
+  }
+
+  100% {
+    opacity: 0.16;
+  }
+}
+
+@media (max-width: 520px) {
+  .mmatrix-stage[data-joined="true"] .mmatrix-actions,
+  .mmatrix-stage[data-session="intro"] .mmatrix-actions {
+    width: min(100%, 18.8rem);
+    max-width: 18.8rem;
+  }
+
+  .omna-mode-orbits {
+    width: min(100%, 18rem);
+    height: 4.5rem;
+    gap: 0.36rem;
+  }
+
+  .omna-mode-orb {
+    width: clamp(4.05rem, 23vw, 5rem);
+    min-height: 2.38rem;
+    font-size: clamp(0.54rem, 2.36vw, 0.62rem);
+  }
+
+  .omna-mode-orb:nth-child(2) {
+    width: clamp(4.65rem, 26vw, 5.65rem);
+    min-height: 2.72rem;
+  }
+
+  .omna-primary-orb {
+    width: clamp(7.4rem, 38vw, 8.8rem);
+    height: 4.2rem;
+  }
+
+  .omna-audio-profile {
+    width: min(100%, 15.4rem);
+    font-size: 0.56rem;
+  }
+
+  .omna-disconnect-orb {
+    min-height: 1.75rem;
   }
 }
